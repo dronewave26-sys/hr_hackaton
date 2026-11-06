@@ -56,6 +56,19 @@ assert.deepEqual(
 );
 
 const sales = workspace.vacancies.find((job) => job.demoKey === "sales");
+const soc = workspace.vacancies.find((job) => job.demoKey === "soc");
+assert.notEqual(sales.id, soc.id);
+assert.notEqual(sales.title, soc.title);
+assert.notEqual(sales.assessment.materials, soc.assessment.materials);
+assert.equal(
+  new Set([...sales.candidates, ...soc.candidates].map((person) => person.id))
+    .size,
+  4,
+);
+assert.ok(
+  sales.candidates.every((person) => person.demoKey.startsWith("sales-")),
+);
+assert.ok(soc.candidates.every((person) => person.demoKey.startsWith("soc-")));
 await update({
   type: "analyze",
   vacancyId: sales.id,

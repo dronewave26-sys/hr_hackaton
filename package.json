@@ -31,6 +31,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.4.5",
+    "jsdom": "31.0.0",
     "prettier": "3.9.10",
     "tailwindcss": "^4",
     "typescript": "^5",
@@ -38,7 +39,7 @@
   },
   "type": "module",
   "engines": {
-    "node": "\u003e=22"
+    "node": ">=22"
   },
   "overrides": {
     "@typescript-eslint/typescript-estree": {

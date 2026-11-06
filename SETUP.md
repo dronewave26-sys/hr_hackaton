@@ -7,7 +7,7 @@ Bu mərhələnin əhatəsi: HR vakansiyaları, CV saxlanması və mənbəli təh
 1. `npm ci`
 2. `npm run dev`
 3. Terminaldakı `http://127.0.0.1:3000` keçidini aç.
-4. Uydurma satış və SOC məlumatlarını tətbiqdəki ayrıca demo düyməsi ilə yüklə.
+4. **Satış nümunəsini aç** və ya **SOC nümunəsini aç** düyməsinə bas. Seçilən vakansiya öz CV və tapşırığı ilə açılır; lazım olduqda uydurma nümunələr əvvəlcə yüklənir.
 
 Supabase qurulmayanda development rejimində lokal demo localhost üçün açılır. Məlumat `.data/workspace.json` daxilində saxlanır və brauzerin gizli demo kukisi ilə ayrılır. Bu, Supabase HR autentifikasiyasını və çox prosesli istehsalat bazasını əvəz etmir. Kukini silmək və ya başqa brauzer açmaq əvvəlki demo iş sahəsinə girişi itirir. `.data` Git-dən kənardadır; uydurma məlumatdan istifadə et.
 

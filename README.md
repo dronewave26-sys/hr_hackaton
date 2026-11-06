@@ -2,7 +2,7 @@
 
 CV-dəki bacarıq iddiasını praktik iş nümunəsi ilə müqayisə edən HR tətbiqi üçün hazırlıq paketi.
 
-**Cari mərhələ: ilk işlək HR versiyası.** Üç AI-nin interfeys, server və inteqrasiya işi birləşdirilib. Lokal vakansiya/CV saxlama, mənbəli demo təhlili və sınaq layihəsi işləyir; 63 test və production HTTP axını yoxlanıb. Real Supabase/Claude bağlantısı ayrıca konfiqurasiya və sınaq tələb edir. Namizəd sessiyası/taymeri və yekun praktik hesabat növbəti mərhələdir; deploy edilməyib.
+**Cari mərhələ: ilk işlək HR versiyası.** Üç AI-nin interfeys, server və inteqrasiya işi birləşdirilib. Lokal vakansiya/CV saxlama, mənbəli demo təhlili və sınaq layihəsi işləyir; 68 test və production HTTP axını yoxlanıb. Real Supabase/Claude bağlantısı ayrıca konfiqurasiya və sınaq tələb edir. Namizəd sessiyası/taymeri və yekun praktik hesabat növbəti mərhələdir; deploy edilməyib.
 
 ## Son razılaşdırılmış qərarlar
 

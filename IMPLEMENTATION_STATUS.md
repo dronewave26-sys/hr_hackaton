@@ -16,7 +16,7 @@ Branch-lər və fayl sahibliyi `TEAM_WORKFLOW.md`-dədir. Bütün kod `main` üz
 
 - TypeScript yoxlaması: xətasız.
 - ESLint: xətasız və xəbərdarlıqsız.
-- Vitest: 7 test faylı, 63 test keçir.
+- Vitest: 8 test faylı, 68 test keçir. Beş DOM testi Satış və SOC üçün ayrı başlıq, CV və tapşırıq materialını, mövcud və yeni yüklənən nümunənin düzgün açılmasını yoxlayır.
 - Next.js production build: uğurlu.
 - Production serverində real HTTP axını: demo məlumatların təkrar yaratmadan yüklənməsi, sitatların uyğunluğu, yeni vakansiya/CV saxlama, yenidən oxuma, təsdiqin qaralamaya qaytarılması, ayrı brauzer demo sahəsi, yanlış origin və köhnə revision yoxlamaları keçir.
 - Paket auditi: 0 zəiflik. İnkişaf alətinin keçid asılılığı üçün override package.json daxilində saxlanılıb və lint/test/build ilə yoxlanıb.
@@ -35,4 +35,6 @@ Real HTTP yoxlaması unit testlərdə görünməyən localhost/127.0.0.1 origin 
 
 ## İndi istifadə
 
-`npm ci`, sonra `npm run dev`. `http://127.0.0.1:3000` ünvanında **Satış və SOC nümunələrini yüklə** düyməsinə bas. Vakansiyanı açıb namizədi seç, **Demo təhlilini göstər** ilə saxlanmış nümunəyə bax. **Sınaq layihəsi** bölməsində mərhələləri redaktə edib saxla/təsdiqlə. Yeni CV üçün canlı təhlil `SETUP.md` üzrə Claude konfiqurasiyasını tələb edir.
+`npm ci`, sonra `npm run dev`. `http://127.0.0.1:3000` ünvanında **Satış nümunəsini aç** və ya **SOC nümunəsini aç** düyməsinə bas. Seçilən nümunə birbaşa açılır; nümunələr yoxdursa əvvəlcə yüklənir. Mövcud nümunələr yenidən yaradılmır. Namizədi seç, **Demo təhlilini göstər** ilə saxlanmış nümunəyə bax. **Sınaq layihəsi** bölməsində mərhələləri redaktə edib saxla/təsdiqlə. Yeni CV üçün canlı təhlil `SETUP.md` üzrə Claude konfiqurasiyasını tələb edir.
+
+Satış və SOC-un eyni məlumat açması barədə istifadəçi bildirişi saxlanmış məlumatlarda və DOM testində təkrarlanmadı. Əvvəlki ortaq yükləmə düyməsi ümumi siyahını saxlayırdı; indi hər nümunənin ayrıca açılış düyməsi var. Brauzer hostu əlçatan olmadığı üçün istifadəçinin konkret brauzer sessiyasında vizual yoxlama tamamlanmayıb.
