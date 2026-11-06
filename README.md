@@ -2,7 +2,7 @@
 
 CV-dəki bacarıq iddiasını praktik iş nümunəsi ilə müqayisə edən HR tətbiqi üçün hazırlıq paketi.
 
-**Cari mərhələ: kodsuz hazırlıq.** Tətbiq, baza, API inteqrasiyası və deploy hazır deyil. Buradakı sənədlər hakatondan əvvəl hazırlanıb; istifadə qaydaları təşkilatçılardan dəqiqləşdirilməlidir.
+**Cari mərhələ: ilk işlək HR versiyasının inteqrasiyası.** İstifadəçi kodlaşdırmaya və üç AI ilə paralel işə başlamağı tapşırıb. Lokal HR paneli, CV təhlili və sınaq layihəsi hazırlanır. Real Supabase/Claude bağlantısı konfiqurasiya tələb edir; deploy edilməyib. İlkin hazırlıq sənədləri tarixçə kimi qorunur.
 
 ## Son razılaşdırılmış qərarlar
 
@@ -20,12 +20,14 @@ CV-dəki bacarıq iddiasını praktik iş nümunəsi ilə müqayisə edən HR t�
 | npm | 11.20.0 | İşləyir |
 | Git | 2.56.0.windows.4 | İstifadəçi səviyyəsində quraşdırıldı, PATH əlavə edildi və əmr yoxlandı |
 
-Git yolu: `C:\Users\ASUS\AppData\Local\Programs\Git\cmd`. Artıq açıq VS Code/terminallar köhnə PATH-i saxlaya bilər; VS Code-u yenidən açmaq lazım ola bilər. Repo yaradılmayıb və commit edilməyib.
+Git yolu: `C:\Users\ASUS\AppData\Local\Programs\Git\cmd`. Artıq açıq VS Code/terminallar köhnə PATH-i saxlaya bilər; VS Code-u yenidən açmaq lazım ola bilər. Lokal repo və ayrıca `ai/frontend`, `ai/backend` branch-ləri yaradılıb. GitHub-da private depo seçilib; uzaq bağlantının tamamlanması hesab girişindən asılıdır.
 
 ## Sənədləri bu ardıcıllıqla oxu
 
 | Sənəd | Nə üçün istifadə olunur? |
 | --- | --- |
+| [SETUP.md](SETUP.md) | Lokal işə salma, Claude/Supabase konfiqurasiyası və yoxlama əmrləri |
+| [TEAM_WORKFLOW.md](TEAM_WORKFLOW.md) | Üç AI üçün fayl sahibliyi, API müqaviləsi və birləşdirmə qaydası |
 | [PREPARATION.md](PREPARATION.md) | İlkin mühit yoxlaması və hazırlıq siyahısı; sondakı yenilənməni də oxu |
 | [OPERATIONS.md](OPERATIONS.md) | Cari hesab statusu, təşkilatçıya hazır mətn, komanda bölgüsü və gözləyən işlər |
 | [PRODUCT_BLUEPRINT.md](PRODUCT_BLUEPRINT.md) | Məhsul əhatəsi, ekranlar, mətnlər və istifadəçi axını |
