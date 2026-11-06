@@ -145,4 +145,3 @@ Qəbul meyarları 1–10 və 12 lokal unit/HTTP testlərdə əhatə olunur. Meya
 Smoke əmri əvvəl `npm run build` tələb edir. Skript özü loopback production serverini `3193` portunda `LOCAL_DEMO_MODE=true` ilə başladır; bulud dəyişənlərini yalnız həmin prosesdə boşaldır. Port doludursa başqa serverə qoşulmur; `CANDIDATE_TEST_PORT=3194` kimi boş port seçin. Sonda yalnız öz serverini dayandırır, yaratdığı dəvətləri ləğv edir. Ayrı uydurma workspace/cavab qeydləri `.data`-da qalır; mövcud istifadəçi məlumatı silinmir. Unit testlərin müvəqqəti faylları təmizlənir.
 
 Next.js 16.4.5 paketinin route handler/page/cookies təlimatları yoxlanılıb; install gedərkən eyni [route](https://nextjs.org/docs/app/api-reference/file-conventions/route), [page](https://nextjs.org/docs/app/api-reference/file-conventions/page) və [cookies](https://nextjs.org/docs/app/api-reference/functions/cookies) rəsmi sənədləri də oxunub.
-
