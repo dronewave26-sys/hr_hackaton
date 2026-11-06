@@ -246,6 +246,25 @@ export function WorkspaceApp() {
     setView("overview");
     setError("");
   };
+  const openDemo = async (demoKey: "sales" | "soc") => {
+    if (busy) return;
+    const existing = workspace?.vacancies.find(
+      (vacancy) => vacancy.demoKey === demoKey,
+    );
+    if (existing) {
+      setNotice("");
+      openVacancy(existing.id);
+      return;
+    }
+    const next = await act({ type: "seed" });
+    if (!next) return;
+    const demo = next.vacancies.find((vacancy) => vacancy.demoKey === demoKey);
+    if (!demo) {
+      setError("Seçilmiş demo nümunəsi tapılmadı. Yenidən cəhd edin.");
+      return;
+    }
+    openVacancy(demo.id);
+  };
   const selected = workspace?.vacancies.find(
     (vacancy) => vacancy.id === vacancyId,
   );
@@ -478,18 +497,29 @@ export function WorkspaceApp() {
                     <br />
                     Hər namizəd üçün daha əsaslı növbəti addım.
                   </p>
-                  <button
-                    className="hero-link"
-                    disabled={busy}
-                    onClick={() => void act({ type: "seed" })}
-                  >
-                    {busy ? (
-                      <LoaderCircle size={16} className="spin" />
-                    ) : (
-                      <ArrowUpRight size={17} />
-                    )}
-                    Satış və SOC nümunələrini yüklə<span>Uydurma demo</span>
-                  </button>
+                  <div className="hero-demo-actions">
+                    <button
+                      className="hero-link"
+                      disabled={busy}
+                      onClick={() => void openDemo("sales")}
+                    >
+                      <BriefcaseBusiness size={16} />
+                      Satış nümunəsini aç
+                      <ArrowUpRight size={14} />
+                    </button>
+                    <button
+                      className="hero-link"
+                      disabled={busy}
+                      onClick={() => void openDemo("soc")}
+                    >
+                      <ShieldCheck size={16} />
+                      SOC nümunəsini aç
+                      <ArrowUpRight size={14} />
+                    </button>
+                  </div>
+                  <p className="hero-demo-caption">
+                    Hər iki nümunədə bütün məlumatlar uydurmadır.
+                  </p>
                 </div>
                 <div className="hero-visual" aria-hidden="true">
                   <div className="visual-orbit orbit-one" />
