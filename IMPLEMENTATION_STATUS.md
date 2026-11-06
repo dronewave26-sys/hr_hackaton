@@ -1,40 +1,38 @@
-# SkillProof AI — ilk HR mərhələsinin nəticəsi
+# SkillProof AI ? inteqrasiya n?tic?si
 
-Tarix: 6 noyabr 2026. İstifadəçi kodlaşdırmaya, üç AI ilə paralel işə və `hr_hackaton` adlı private GitHub deposuna icazə verib.
+Tarix: 6 noyabr 2026. ?stifad??inin icaz?si il? HR, namiz?d v? praktik hesabat hiss?l?ri main-d? birl??dirilib.
 
-## Birləşdirilən hissələr
+## Haz?r hiss?l?r
 
-| İstiqamət | Nəticə |
-| --- | --- |
-| İnterfeys | Azərbaycan dilində uyğunlaşan HR paneli, real say göstəriciləri, axtarış/filtr, vakansiya və CV formaları, mənbəli CV təhlili, sınaq layihəsi redaktəsi/təsdiqi, bağlantı və giriş ekranları |
-| Server | Supabase HR sessiyasının yoxlanması, RLS üçün miqrasiya, lokal demo saxlama, sorğu ölçü həddi, origin yoxlaması, revision konflikti, Claude sorğusu və sitat yoxlaması |
-| İnteqrasiya | Ortaq runtime sxemləri, dörd demo CV, etibarlı lokal saxlama, unit/API testləri, production HTTP yoxlaması, formatlama və GitHub CI |
+- Az?rbaycan dilind? HR paneli, ayr? Sat??/SOC n?mun?l?ri, vakansiya v? CV formalar?.
+- CV m?tnind?n d?qiq sitatlarla canl? Claude t?hlili; ?vv?lc?d?n haz?rlanm?? demo ayr?ca i?ar?l?nir.
+- HR-in redakt? v? t?sdiql?diyi ?? m?rh?l?li s?naq; d?v?t zaman? d?yi?m?z sur?t.
+- Ayr?ca namiz?d ke?idi, m?hdud sessiya kukisi, server taymeri, avtosaxlama, m?rh?l?li a??lma, t?krar sor?ular v? yekun g?nd?rm?.
+- HR panelind? d?v?t tarix??si v? q?bul olunmu? cavablar; tamamlanan s?naq ???n Claude praktik hesabat?.
+- H?r meyar ?zr? m??ahid?, cavabdan yoxlanm?? sitat, ?sasland?rma v? canl? m?sahib? sual?. Avtomatik i?? q?bul/r?dd q?rar? yoxdur.
+- Supabase Auth, sahiblik/RLS, ?? miqrasiya v? d?yi?m?z hesabat saxlanmas?. Eyni s?naq ???n t?krar hesabat sor?usu saxlanm?? n?tic?ni qaytar?r.
+- A?ar?n gizli terminalda daxil edilm?si v? Vercel-? ?t?r?lm?si ???n scripts/configure-claude.ps1.
 
-Branch-lər və fayl sahibliyi `TEAM_WORKFLOW.md`-dədir. Bütün kod `main` üzərində birləşdirilir. İstifadə olunan hesab və uzaq depo: [dronewave26-sys/hr_hackaton](https://github.com/dronewave26-sys/hr_hackaton). Məxfilik private olaraq yoxlanıb; push və GitHub Actions nəticələri ayrıca təsdiqlənməlidir.
+## Yoxlamalar
 
-## Keçən yoxlamalar
+- TypeScript v? ESLint ke?ir.
+- 15 faylda 124 test ke?ir: ?sas domen, CV s?butu, namiz?d v?ziyy?ti/CAS/vaxt, server icaz?l?ri, praktik hesabat v? DOM ax?nlar?.
+- Next.js production build ke?ir.
+- Lokal production HTTP: HR ax?n? v? Sat??/SOC namiz?d ax?n?; ba?qa sahib, yanl?? origin, k?hn? revision, gizli m?rh?l?l?r, eyni sor?unun t?krar?, terminal cavab?n qorunmas? v? d?v?tin l??vi yoxlan?b.
+- Hesabat ???n siyah?/sahiblik v? Claude qurulmayanda cavablar?n saxlanmas? HTTP il? yoxlan?b.
+- Real Supabase: 001/002/003 t?tbiq edilib, RLS aktivdir. ?ki HR hesab? v? namiz?d sessiyas? il? ?sas s?rh?dl?r yoxlan?b; Sat??/SOC ?? m?rh?l?ni tamamlay?b v? cavablar yenid?n oxunub.
+- Canl? Claude CV sor?usu ke?ib; b?t?n CV sitatlar? m?nb? il? tutu?durulub. Praktik hesabat?n canl? v? production yoxlama n?tic?l?ri CLOUD_STATUS.md-d?dir.
+- Claude-un s?rb?st m?tn cavab? ilk canl? sor?uda JSON parse x?tas? verdi. SDK-n?n sxem? m?cburi JSON ??x??? il? d?z?ldildi; m?nb? yoxlamas? saxlan?ld?.
 
-- TypeScript yoxlaması: xətasız.
-- ESLint: xətasız və xəbərdarlıqsız.
-- Vitest: 8 test faylı, 68 test keçir. Beş DOM testi Satış və SOC üçün ayrı başlıq, CV və tapşırıq materialını, mövcud və yeni yüklənən nümunənin düzgün açılmasını yoxlayır.
-- Next.js production build: uğurlu.
-- Production serverində real HTTP axını: demo məlumatların təkrar yaratmadan yüklənməsi, sitatların uyğunluğu, yeni vakansiya/CV saxlama, yenidən oxuma, təsdiqin qaralamaya qaytarılması, ayrı brauzer demo sahəsi, yanlış origin və köhnə revision yoxlamaları keçir.
-- Paket auditi: 0 zəiflik. İnkişaf alətinin keçid asılılığı üçün override package.json daxilində saxlanılıb və lint/test/build ilə yoxlanıb.
+## A??q m?hdudiyy?tl?r
 
-Real HTTP yoxlaması unit testlərdə görünməyən localhost/127.0.0.1 origin uyğunsuzluğunu üzə çıxardı. Serverin brauzerin gördüyü Host-u təhlükəsiz şəkildə yoxlaması düzəldildi və regression testləri əlavə olundu.
+- Brauzer avtomatla?d?rma hostu ?l?atan deyil. DOM/HTTP yoxlamalar? ke?ir; mobil/desktop g?r?n??? v? tam klaviatura ax?n?n?n insanla yoxlamas? qal?r.
+- Tab/visibility hadis?l?rinin qeydi, paste m?hdudiyy?ti, hadis? hesabat? v? canl? m?sahib?nin tamamlanma statusu h?l? yoxdur.
+- Bacar?qlar v? s?naq m?zmunu HR t?r?find?n redakt? olunur; AI-nin avtomatik bacar?q/tap??r?q yaratmas? ayr?ca geni?l?ndirm?dir.
+- PDF/DOCX CV y?kl?m?, avtomatik e-po?t, f?rqli tap??r?q variantlar? v? tam kalibrasiya pilotu yoxdur.
+- GitHub push avtomatik Vercel deploy etmir; yay?mlama haz?rda CLI il?dir.
+- Hakaton qaydalar?n?n yaz?l? t?sdiqi v? iki n?f?rlik insan pilotu komandan?n ?z?rind?dir.
 
-## Yoxlanmamış və növbəti mərhələyə qalan hissələr
+## N?mayi?
 
-- Real Claude API sorğusu: açar və model lokal konfiqurasiyada qurulmayıb. Testlərdə provayder cavabları imitasiya olunur.
-- Real Supabase layihəsi, HR hesabları və RLS: 001 miqrasiyası tətbiq edilib, iki real uydurma HR hesabı ilə məlumat izolyasiyası yoxlanıb. Lokal və production API axınları keçir; təfərrüat `CLOUD_STATUS.md`-dədir.
-- Brauzerdə vizual və qarşılıqlı istifadə yoxlaması: avtomatlaşdırma hostu əlçatan olmadı; native Chrome pəncərəsi kiçildilmiş olduğundan dəstəklənən UI yolu ilə idarə edilə bilmədi. İstifadəçi lokal tətbiqi açıb yoxlaya bilər.
-- Bacarıqlar ilk mərhələdə HR tərəfindən daxil edilir; AI ilə avtomatik bacarıq çıxarma sonrakı genişləndirmədir.
-- Namizəd keçidi, sınaq sessiyası, server taymeri, mərhələli cavab/avtosaxlama, hadisələr və yekun praktik cavab hesabatı hələ qurulmayıb.
-- Tam rubrika səviyyələri və müqayisəli tapşırıq variantları növbəti mərhələyə aiddir.
-- İlk HR versiyası https://hr-hackaton.vercel.app ünvanında yayımlanıb. Əvvəlki `VALIDATION_PLAN.md`-dəki bütün gələcək yoxlamalar tamamlanmış sayılmır.
-
-## İndi istifadə
-
-`npm ci`, sonra `npm run dev`. `http://127.0.0.1:3000` ünvanında **Satış nümunəsini aç** və ya **SOC nümunəsini aç** düyməsinə bas. Seçilən nümunə birbaşa açılır; nümunələr yoxdursa əvvəlcə yüklənir. Mövcud nümunələr yenidən yaradılmır. Namizədi seç, **Demo təhlilini göstər** ilə saxlanmış nümunəyə bax. **Sınaq layihəsi** bölməsində mərhələləri redaktə edib saxla/təsdiqlə. Yeni CV üçün canlı təhlil `SETUP.md` üzrə Claude konfiqurasiyasını tələb edir.
-
-Satış və SOC-un eyni məlumat açması barədə istifadəçi bildirişi saxlanmış məlumatlarda və DOM testində təkrarlanmadı. Əvvəlki ortaq yükləmə düyməsi ümumi siyahını saxlayırdı; indi hər nümunənin ayrıca açılış düyməsi var. Brauzer hostu əlçatan olmadığı üçün istifadəçinin konkret brauzer sessiyasında vizual yoxlama tamamlanmayıb.
+CLOUD_STATUS.md-d?ki sayt v? lokal giri? fayl? il? HR panelin? daxil ol. Sat?? v? ya SOC n?mun?sini a?, namiz?di se?. CV t?hlilini v? t?sdiqli s?na?? g?st?r. D?v?t yarat v? tam ke?idi kopyala; ba?qa brauzer/p?nc?r?d? namiz?d ?? m?rh?l?ni tamamlas?n. HR panelind? Praktik s?naq n?tic?l?ri ? Yenil? ? Claude hesabat?n? haz?rla. ?vv?ld?n haz?rlanm?? uydurma tamamlanm?? sessiyalarda saxlanm?? canl? hesabat? a?maq da m?mk?nd?r.

@@ -57,6 +57,22 @@ describe("CV evidence boundaries", () => {
 });
 
 describe("workspace contracts", () => {
+  it("rejects repeated criteria on save while keeping old workspaces readable", () => {
+    const vacancy = createFixtures()[0];
+    vacancy.assessment!.criteria = ["Hesablama", "Hesablama"];
+    expect(
+      workspaceSchema.safeParse({ revision: 1, vacancies: [vacancy] }).success,
+    ).toBe(true);
+    expect(
+      actionSchema.safeParse({
+        type: "saveAssessment",
+        revision: 1,
+        vacancyId: vacancy.id,
+        assessment: vacancy.assessment,
+        approve: true,
+      }).success,
+    ).toBe(false);
+  });
   it("accepts both full demo fixtures and rejects corrupt stored shape", () => {
     expect(
       workspaceSchema.safeParse({ revision: 1, vacancies: createFixtures() })

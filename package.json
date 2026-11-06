@@ -5,12 +5,14 @@
   "scripts": {
     "dev": "next dev --hostname 127.0.0.1",
     "build": "next build",
+    "build:test": "node scripts/build-test.mjs",
     "start": "next start --hostname 127.0.0.1",
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run",
     "test:api": "node scripts/smoke-api.mjs",
     "test:integration": "node scripts/integration.mjs",
+    "test:candidate": "node scripts/candidate-smoke.mjs",
     "format": "prettier --write src tests scripts *.ts *.mjs *.json .github"
   },
   "dependencies": {

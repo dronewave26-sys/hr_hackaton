@@ -169,7 +169,14 @@ export const actionSchema = z.discriminatedUnion("type", [
       stages: z.tuple([text.max(12000), text.max(12000), text.max(12000)]),
       materials: text.max(16000),
       duration: z.number().int().min(5).max(120),
-      criteria: z.array(text.max(500)).min(1).max(15),
+      criteria: z
+        .array(text.max(500))
+        .min(1)
+        .max(15)
+        .refine(
+          (items) => new Set(items).size === items.length,
+          "Qiymətləndirmə meyarları təkrarlanmamalıdır.",
+        ),
     }),
     approve: z.boolean(),
   }),

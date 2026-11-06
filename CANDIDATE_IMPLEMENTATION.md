@@ -1,5 +1,7 @@
 # Namizəd modulunun təhvili
 
+**İnteqrasiya yenilənməsi, 6 noyabr 2026:** aşağıdakı mətn ilkin təhvil tarixçəsidir. Modul main-ə birləşdirilib, HR düyməsi və praktik nəticələr panelinə qoşulub, 002 və 003 real Supabase-də tətbiq edilib. İki HR hesabı ilə giriş sərhədləri və Satış/SOC namizəd axını real bazada yoxlanıb. Cari deploy və AI vəziyyəti `CLOUD_STATUS.md`-dədir.
+
 Branch: `ai/candidate`. Başlanğıc: `origin/main` — `9fda62a20b2621a4351ce21e827f18bead880fbd`.
 Sonradan `origin/main`-in yalnız bulud statusu sənədlərini yeniləyən `3ea1dbac42368e6ccf2a18cfb7083683056790e1` commit-i fast-forward ilə qəbul edilib. Oradakı HR Supabase yoxlaması yeni namizəd miqrasiyasının yoxlanması deyil.
 Lokal qovluq: `C:\Users\User\Documents\hr_hackaton`.
@@ -24,7 +26,7 @@ import { CandidateInvitationControl } from "@/components/candidate/candidate-inv
   candidateId={candidate.id}
   workspaceRevision={workspace.revision}
   approved={Boolean(vacancy.assessment?.approvedAt)}
-/>
+/>;
 ```
 
 HR workspace revision konfliktindən sonra panel son workspace-i yenidən oxumalıdır. Komponent namizəd/vakansiya dəyişəndə əvvəlki keçidi göstərmir. `approved` server təsdiqini əvəz etmir.

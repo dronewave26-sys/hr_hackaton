@@ -4,11 +4,11 @@
 
 ## İş bölgüsü
 
-| İcraçı | Branch | Sahib olduğu fayllar | Nəticə |
-| --- | --- | --- | --- |
-| İnterfeys AI | `ai/frontend` | `src/app/page.tsx`, `src/app/layout.tsx`, `src/app/globals.css`, `src/components/**` | Azərbaycan dilində HR paneli, vakansiya/CV/sınaq layihəsi ekranları |
-| Server AI | `ai/backend` | `src/app/api/**`, `src/lib/server/**`, `supabase/**`, `tests/backend/**` | Giriş və məlumat sərhədləri, Claude, saxlama API-si, server yoxlamaları |
-| İnteqrasiya AI | `main` | `src/lib/domain.ts`, `src/lib/fixtures.ts`, `src/lib/local-store.ts`, `tests/core/**`, konfiqurasiya, lockfile, CI və sənədlər | Ortaq müqavilə, inteqrasiya, ümumi yoxlamalar və birləşdirmə |
+| İcraçı         | Branch        | Sahib olduğu fayllar                                                                                                           | Nəticə                                                                  |
+| -------------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------- |
+| İnterfeys AI   | `ai/frontend` | `src/app/page.tsx`, `src/app/layout.tsx`, `src/app/globals.css`, `src/components/**`                                           | Azərbaycan dilində HR paneli, vakansiya/CV/sınaq layihəsi ekranları     |
+| Server AI      | `ai/backend`  | `src/app/api/**`, `src/lib/server/**`, `supabase/**`, `tests/backend/**`                                                       | Giriş və məlumat sərhədləri, Claude, saxlama API-si, server yoxlamaları |
+| İnteqrasiya AI | `main`        | `src/lib/domain.ts`, `src/lib/fixtures.ts`, `src/lib/local-store.ts`, `tests/core/**`, konfiqurasiya, lockfile, CI və sənədlər | Ortaq müqavilə, inteqrasiya, ümumi yoxlamalar və birləşdirmə            |
 
 Ortaq fayla ehtiyac yaranarsa əvvəl inteqrasiya AI-yə yazılır. `package.json` və lockfile yalnız inteqrasiya AI tərəfindən dəyişdirilir. API formatı razılaşdırılmadan dəyişdirilmir. Heç bir AI başqa worktree-də checkout, reset, clean və ya force push etmir.
 
@@ -24,7 +24,7 @@ Namizəd icraçısı mövcud HR ekranını, workspace API-sini, ortaq domain/kon
 
 HR vakansiya yaradır, bacarıqları daxil edir, CV saxlayır və mənbəli təhlil alır. Satış və SOC üçün uydurma nümunələr ayrıca yüklənir. Sınağın üç mərhələsi, materialı, müddəti və meyarları redaktə və HR təsdiqi ilə saxlanır.
 
-Namizədin ayrıca keçidi, server sınaq taymeri və yekun praktik cavab hesabatı növbəti mərhələdir. Hazır olmayan funksiyalar işlək kimi göstərilmir. Deploy bu işə daxil deyil.
+Son istifadəçi tapşırığı ilə namizəd modulu, server taymeri və praktik Claude hesabatı da birləşdirilib; Supabase/Vercel qurulması və production deploy ayrıca səlahiyyətləndirilib. Hesabat üçün server AI `src/lib/server/reports/**`, `src/lib/reports/contracts.ts`, hesabat/siyahı route-ları və `003_practical_reports.sql` üzərində işləyib. Namizədin əsas sessiya müqaviləsi qorunub. Aktual nəticələr `IMPLEMENTATION_STATUS.md`-dədir.
 
 ## Ortaq API müqaviləsi
 

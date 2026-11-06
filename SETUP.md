@@ -1,6 +1,6 @@
 # SkillProof AI — işə salma
 
-Bu mərhələnin əhatəsi: HR vakansiyaları, CV saxlanması və mənbəli təhlil, sınaq layihəsinin redaktəsi/təsdiqi. Namizəd keçidi, server taymeri və yekun praktik hesabat növbəti mərhələdir. İlk HR versiyası yayımlanıb; hazır Supabase/Vercel əlaqəsi və giriş qaydası [CLOUD_STATUS.md](CLOUD_STATUS.md)-dədir.
+Cari əhatə: HR vakansiyaları, mənbəli CV təhlili, təsdiqli sınaq, ayrıca namizəd keçidi, server taymeri, üç mərhələ/avtosaxlama və cavabdan sitatlarla praktik Claude hesabatı. Son deploy və real xidmət yoxlamaları [CLOUD_STATUS.md](CLOUD_STATUS.md)-dədir.
 
 ## Lokal demo
 
@@ -17,6 +17,8 @@ Production build ilə lokal demo yoxlamaq üçün `.env.example` faylını `.env
 
 `.env.local` daxilində `ANTHROPIC_API_KEY` və hesabına açıq modelin dəqiq adını `ANTHROPIC_MODEL` kimi qur. Açarı çata, sənədə və Git-ə yazma. Serveri yenidən başlat.
 
+Bu hesabda Models API ilə təsdiqlənmiş ID `claude-haiku-5-5`-dir; `Haiku5.5` API ID-si deyil. Windows-da `powershell -NoProfile -File scripts/configure-claude.ps1` açarı gizli terminal sorğusu ilə qəbul edib lokal fayla və bağlı Vercel layihəsinin üç mühitinə ötürür. Əvvəl düzgün Vercel hesabı/layihəsi ilə giriş edilmiş olmalıdır.
+
 Tətbiq konfiqurasiya olduqda canlı təhlil düyməsini açır; bu göstərici real API sorğusunun uğurla keçdiyini hələ təsdiqləmir. Yanlış model, limit, bağlantı və ya yararsız AI nəticəsi aydın xəta verir; CV qorunur. Hər sitat CV mətnində yoxlanır. Sınaqdan keçmiş canlı sorğu olmadan AI inteqrasiyasını yoxlanmış sayma.
 
 Saxlanmış demo təhlili yalnız dəyişdirilməmiş nümunə CV-lər üçün verilir və ayrıca işarələnir. Yeni CV üçün hazır hesabat və ya uydurma AI nəticəsi yoxdur.
@@ -26,12 +28,12 @@ Rəsmi mənbə: [Claude API açarının qurulması](https://platform.claude.com/
 ## Supabase HR girişi və saxlama
 
 1. İstifadə edəcəyin ayrıca Supabase layihəsini seç.
-2. `supabase/migrations/001_workspace.sql` mətnini nəzərdən keçirib həmin layihənin SQL editorunda bir dəfə icra et.
+2. `supabase/migrations/001_workspace.sql`, `002_candidate_sessions.sql`, `003_practical_reports.sql` fayllarını bu ardıcıllıqla bir dəfə tətbiq et. Hazır layihədə hamısı artıq tətbiq edilib; təkrar icra etmə.
 3. Supabase Auth-da HR istifadəçisi yarat və təsdiq et. Bu versiya özbaşına qeydiyyat və e-poçt göndərmir.
-4. `.env.local` daxilində `NEXT_PUBLIC_SUPABASE_URL` və `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` doldur; serveri yenidən başlat.
+4. `.env.local` daxilində `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` və yalnız server üçün `SUPABASE_SECRET_KEY` qur; serveri yenidən başlat.
 5. HR istifadəçisinin e-poçt/şifrəsi ilə tətbiqə daxil ol.
 
-Hər iki Supabase dəyişəni birlikdə tələb olunur. Supabase qurulanda lokal demo saxlama avtomatik istifadə edilmir. Lokal demo məlumatları Supabase-ə avtomatik köçürülmür. Bu mərhələdə server secret/service-role açarı tələb olunmur; məlumatlar HR-in yoxlanmış sessiyası və RLS ilə işləyir.
+URL və publishable açar birlikdə tələb olunur. Namizəd sessiyası və hesabatın server əməliyyatları əlavə secret açarı tələb edir; bu açara `NEXT_PUBLIC_` prefiksi vermə. Supabase qurulanda lokal demo saxlama avtomatik istifadə edilmir. Lokal demo məlumatları Supabase-ə avtomatik köçürülmür. HR sahiblik sərhədləri serverdə və RLS ilə yoxlanır.
 
 Rəsmi mənbə: [Supabase SSR müştərisi](https://supabase.com/docs/guides/auth/server-side/creating-a-client?framework=nextjs).
 
@@ -47,7 +49,10 @@ Rəsmi mənbə: [Supabase SSR müştərisi](https://supabase.com/docs/guides/aut
 - `npm run build`
 - Lokal server açıq olduqda `npm run test:api`
 - Build hazır olduqda `npm run test:integration` ayrıca production serveri başladır, real HTTP yoxlamasını keçir və öz serverini dayandırır. GitHub CI-də də bu yoxlama işləyir.
+- `npm run test:candidate` namizəd axınını, siyahını, sahiblik sərhədini və Claude qurulmayanda cavabların qorunmasını real HTTP ilə yoxlayır.
+
+`.env.local` real Supabase ilə qurulubsa, lokal demo HTTP testlərindən əvvəl `npm run build:test` işlət. Next.js `NEXT_PUBLIC_*` dəyişənlərini build zamanı sabitləşdirir; onları yalnız test serverində boşaltmaq kifayət etmir. Bu əmr env faylını dəyişmir. Sonra real buludla lokal production işlətmək üçün yenidən `npm run build` et. Vercel öz production dəyişənləri ilə ayrıca build edir.
 
 `test:api` hər dəfə ayrıca demo brauzer kukisi ilə yalnız uydurma məlumat yaradır. Əsas iş sahəsini və real Supabase məlumatlarını yoxlamaq üçün nəzərdə tutulmayıb. Lokal `.data` daxilində testə aid ayrıca iş sahəsi qala bilər.
 
-Real Supabase hesabları/RLS və Claude API bağlantısı açarlar qurulandan sonra ayrıca yoxlanmalıdır. Namizəd sınağına aid gələcək yoxlamalar `VALIDATION_PLAN.md` daxilində plan kimi qalır.
+Canlı xidmət yoxlamalarının nəticəsi `CLOUD_STATUS.md`-dədir. `VALIDATION_PLAN.md` ilkin qəbul planıdır; bütün maddələrin tamamlandığı iddia edilmir.

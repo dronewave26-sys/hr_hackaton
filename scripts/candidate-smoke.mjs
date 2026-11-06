@@ -30,6 +30,8 @@ const server = spawn(
       NEXT_PUBLIC_SUPABASE_URL: "",
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: "",
       SUPABASE_SECRET_KEY: "",
+      ANTHROPIC_API_KEY: "",
+      ANTHROPIC_MODEL: "",
     },
     stdio: ["ignore", "pipe", "pipe"],
   },
@@ -234,6 +236,22 @@ try {
     );
     assert.ok(!JSON.stringify(detail).includes(fragment));
     assert.ok(!JSON.stringify(detail).includes("secretHash"));
+    const reportPath = `/api/candidate-invitations/${invite.invitationId}/report`;
+    const listPath = `/api/candidate-invitations?vacancyId=${vacancy.id}&candidateId=${vacancy.candidates[0].id}`;
+    assert.ok(
+      (await hr(listPath)).invitations.some(
+        (item) => item.invitationId === invite.invitationId,
+      ),
+    );
+    assert.deepEqual((await outsider(listPath)).invitations, []);
+    await outsider(reportPath, undefined, 404);
+    assert.deepEqual(await hr(reportPath), { report: null, aiReady: false });
+    await hr(reportPath, {}, 503);
+    assert.equal(
+      (await hr(`/api/candidate-invitations/${invite.invitationId}`)).invitation
+        .unlockedStages[2].acceptedAnswer,
+      "Əsaslandırma",
+    );
     const original = structuredClone(vacancy.assessment);
     ({ workspace } = await hr("/api/workspace", {
       type: "saveAssessment",
