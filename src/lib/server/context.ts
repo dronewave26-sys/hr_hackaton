@@ -5,11 +5,10 @@ import { createHash, randomBytes } from "node:crypto";
 import type { NextRequest } from "next/server";
 import { LocalStore } from "../local-store";
 import { join } from "node:path";
-import { emptyWorkspace, type Workspace, type AppConfig } from "../domain";
+import { emptyWorkspace, workspaceSchema, type Workspace, type AppConfig } from "../domain";
+import { AppError } from "./errors";
 
-export class AppError extends Error {
-  constructor(message: string, public status = 400) { super(message); }
-}
+export { AppError } from "./errors";
 export const supabaseConfigured = () => Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY);
 
 export async function supabaseServer() {
@@ -30,18 +29,23 @@ export async function context(request: NextRequest) {
     const get = async (): Promise<Workspace> => {
       const { data: row, error } = await supabase.from("skillproof_workspaces").select("revision,data").eq("owner_id", owner).maybeSingle();
       if (error) throw new AppError("Supabase məlumatı oxunmadı. SETUP.md üzrə bazanın qurulduğunu yoxlayın.", 503);
-      return row ? { revision: row.revision, vacancies: row.data.vacancies } : emptyWorkspace();
+      if (!row) return emptyWorkspace();
+      const parsed = workspaceSchema.safeParse({ revision: row.revision, vacancies: row.data?.vacancies });
+      if (!parsed.success) throw new AppError("Saxlanmış məlumatın formatı yanlışdır. Məlumatı silmədən bazanı yoxlayın.", 503);
+      return parsed.data;
     };
     const change = async (transform: (workspace: Workspace) => Workspace) => {
       const current = await get();
       const next = transform(structuredClone(current));
       next.revision = current.revision + 1;
+      workspaceSchema.parse(next);
       if (current.revision === 0) {
         const { error } = await supabase.from("skillproof_workspaces").insert({ owner_id: owner, revision: next.revision, data: { vacancies: next.vacancies } });
-        if (error) throw new AppError("Məlumat saxlanmadı. Yeniləyib təkrar cəhd edin.", 409);
+        if (error) throw new AppError(error.code === "23505" ? "Məlumat başqa pəncərədə dəyişib. Yeniləyib təkrar cəhd edin." : "Supabase məlumatı saxlanmadı. Bağlantı və giriş qaydalarını yoxlayın.", error.code === "23505" ? 409 : 503);
       } else {
         const { data, error } = await supabase.from("skillproof_workspaces").update({ revision: next.revision, data: { vacancies: next.vacancies } }).eq("owner_id", owner).eq("revision", current.revision).select("owner_id");
-        if (error || !data?.length) throw new AppError("Məlumat başqa pəncərədə dəyişib. Yeniləyib təkrar cəhd edin.", 409);
+        if (error) throw new AppError("Supabase məlumatı saxlanmadı. Bağlantı və giriş qaydalarını yoxlayın.", 503);
+        if (!data?.length) throw new AppError("Məlumat başqa pəncərədə dəyişib. Yeniləyib təkrar cəhd edin.", 409);
       }
       return next;
     };

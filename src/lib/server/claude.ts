@@ -1,7 +1,7 @@
 import "server-only";
 import Anthropic from "@anthropic-ai/sdk";
 import { analysisSchema, validateAnalysis, type Vacancy, type Candidate } from "../domain";
-import { AppError } from "./context";
+import { AppError } from "./errors";
 import { z } from "zod";
 
 export async function analyzeCV(vacancy: Vacancy, candidate: Candidate) {
