@@ -54,7 +54,7 @@ export async function context(request: NextRequest) {
   if (Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL) !== Boolean(process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY)) {
     throw new AppError("Supabase URL və açarı birlikdə qurulmalıdır.", 503);
   }
-  const localHost = ["localhost", "127.0.0.1", "[::1]"].includes(request.nextUrl.hostname);
+  const localHost = ["localhost", "127.0.0.1", "[::1]"].includes(requestOrigin(request).hostname);
   const localEnabled = process.env.LOCAL_DEMO_MODE === "true" || (process.env.NODE_ENV !== "production" && process.env.LOCAL_DEMO_MODE !== "false");
   if (!localHost || !localEnabled) throw new AppError("Bu mühitdə Supabase qurulmalıdır. Lokal demo yalnız localhost üçün açıqdır.", 503);
   const jar = await cookies();
@@ -69,7 +69,25 @@ export async function context(request: NextRequest) {
   return { config, get: () => store.get(owner), change: (transform: (workspace: Workspace) => Workspace) => store.change(owner, transform) };
 }
 
+function requestOrigin(request: NextRequest): URL {
+  // Next can normalize loopback nextUrl hosts to localhost. The actual Host
+  // preserves the browser-facing authority; never substitute forwarded headers.
+  const host = request.headers.get("host") ?? request.nextUrl.host;
+  const protocol = request.nextUrl.protocol;
+  if (!host || !/^[a-z0-9.\-:[\]]+$/i.test(host) || !["http:", "https:"].includes(protocol)) {
+    throw new AppError("Sorğunun mənbəyi təsdiqlənmədi.", 403);
+  }
+  try { return new URL(`${protocol}//${host}`); }
+  catch { throw new AppError("Sorğunun mənbəyi təsdiqlənmədi.", 403); }
+}
+
 export function requireSameOrigin(request: NextRequest) {
-  const origin = request.headers.get("origin");
-  if (origin !== request.nextUrl.origin) throw new AppError("Sorğunun mənbəyi təsdiqlənmədi.", 403);
+  const rawOrigin = request.headers.get("origin");
+  if (!rawOrigin || !/^https?:\/\/[^/?#@\\\s]+$/i.test(rawOrigin)) {
+    throw new AppError("Sorğunun mənbəyi təsdiqlənmədi.", 403);
+  }
+  let origin: URL;
+  try { origin = new URL(rawOrigin); }
+  catch { throw new AppError("Sorğunun mənbəyi təsdiqlənmədi.", 403); }
+  if (origin.origin !== requestOrigin(request).origin) throw new AppError("Sorğunun mənbəyi təsdiqlənmədi.", 403);
 }

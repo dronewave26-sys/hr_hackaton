@@ -47,6 +47,10 @@ describe("local mode isolation", () => {
   it("rejects remote hosts even if local demo was explicitly enabled", async () => {
     await expect(context(request("https://example.com/api/workspace"))).rejects.toMatchObject({ status: 503 });
   });
+  it("does not let an internal localhost URL hide a remote actual Host", async () => {
+    const remote = new NextRequest("http://localhost:3000/api/workspace", { headers: { host: "example.com:3000" } });
+    await expect(context(remote)).rejects.toMatchObject({ status: 503 });
+  });
   it("does not silently enable local storage in production", async () => {
     vi.stubEnv("NODE_ENV", "production");
     vi.stubEnv("LOCAL_DEMO_MODE", "");
@@ -70,6 +74,29 @@ describe("origin validation", () => {
     expect(() => requireSameOrigin(request("http://localhost/api", "http://localhost"))).not.toThrow();
     expect(() => requireSameOrigin(request("http://localhost/api", "https://attacker.example"))).toThrow();
     expect(() => requireSameOrigin(request())).toThrow();
+  });
+  it("accepts browser-facing loopback Host when Next normalizes its internal URL", () => {
+    const normalized = new NextRequest("http://localhost:3000/api/workspace", { headers: { host: "127.0.0.1:3000", origin: "http://127.0.0.1:3000" } });
+    expect(() => requireSameOrigin(normalized)).not.toThrow();
+  });
+  it("normalizes case and default ports without changing origin identity", () => {
+    const normalized = new NextRequest("http://localhost/api", { headers: { host: "LOCALHOST:80", origin: "http://localhost" } });
+    expect(() => requireSameOrigin(normalized)).not.toThrow();
+  });
+  it.each([
+    "https://127.0.0.1:3000", "http://127.0.0.1:4000", "http://localhost:3000", "http://attacker.example",
+    "null", "http://127.0.0.1:3000/path", "http://user@127.0.0.1:3000", "http://127.0.0.1:3000,http://attacker.example",
+  ])("rejects a different or malformed browser origin: %s", (origin) => {
+    const req = new NextRequest("http://localhost:3000/api", { headers: { host: "127.0.0.1:3000", origin } });
+    expect(() => requireSameOrigin(req)).toThrow();
+  });
+  it("does not trust forwarded host/protocol to match an attacker origin", () => {
+    const req = new NextRequest("http://localhost:3000/api", { headers: { host: "127.0.0.1:3000", origin: "https://attacker.example", "x-forwarded-host": "attacker.example", "x-forwarded-proto": "https" } });
+    expect(() => requireSameOrigin(req)).toThrow();
+  });
+  it("rejects malformed Host values instead of parsing them as URLs", () => {
+    const req = new NextRequest("http://localhost/api", { headers: { host: "localhost/attacker", origin: "http://localhost" } });
+    expect(() => requireSameOrigin(req)).toThrow();
   });
 });
 
