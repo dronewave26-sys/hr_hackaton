@@ -62,6 +62,12 @@ describe("practical Claude output", () => {
     expect(result.source).toBe("claude");
     expect(result.model).toBe("test-model");
     const sent = JSON.parse(mocks.create.mock.calls[0][0].messages[0].content);
+    expect(mocks.create.mock.calls[0][0].output_config.format.type).toBe(
+      "json_schema",
+    );
+    expect(
+      mocks.create.mock.calls[0][0].output_config.format.schema.properties,
+    ).toHaveProperty("criteria");
     expect(sent.stages[0].acceptedAnswer).toBe(record.answers[0].answer);
     expect(sent.criteria).toEqual(record.assessment.criteria);
     expect(sent).not.toHaveProperty("cv");

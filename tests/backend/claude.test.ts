@@ -49,6 +49,10 @@ describe("Claude CV analysis", () => {
       timeout: 45000,
     });
     const input = mocks.create.mock.calls[0][0];
+    expect(input.output_config.format.type).toBe("json_schema");
+    expect(input.output_config.format.schema.properties).toHaveProperty(
+      "items",
+    );
     expect(JSON.parse(input.messages[0].content)).toEqual({
       vacancy: {
         title: vacancy.title,
