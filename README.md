@@ -2,7 +2,7 @@
 
 CV-dəki bacarıq iddiasını praktik iş nümunəsi ilə müqayisə edən HR tətbiqi üçün hazırlıq paketi.
 
-**Cari mərhələ: ilk işlək HR versiyası.** Üç AI-nin interfeys, server və inteqrasiya işi birləşdirilib. Lokal vakansiya/CV saxlama, mənbəli demo təhlili və sınaq layihəsi işləyir; 68 test və production HTTP axını yoxlanıb. Real Supabase/Claude bağlantısı ayrıca konfiqurasiya və sınaq tələb edir. Namizəd sessiyası/taymeri və yekun praktik hesabat növbəti mərhələdir; deploy edilməyib.
+**Cari mərhələ: ilk işlək HR versiyası.** Üç AI-nin interfeys, server və inteqrasiya işi birləşdirilib. Lokal vakansiya/CV saxlama, mənbəli demo təhlili və sınaq layihəsi işləyir; 68 test və production HTTP axını yoxlanıb. Supabase bağlantısı və iki HR hesabı ilə izolyasiya yoxlanıb; ilk HR versiyası https://hr-hackaton.vercel.app ünvanında yayımlanıb. Claude bağlantısı, namizəd sessiyası/taymeri və yekun praktik hesabat hələ qalır. Hazır bulud quruluşu və giriş üçün [CLOUD_STATUS.md](CLOUD_STATUS.md) oxu.
 
 ## Son razılaşdırılmış qərarlar
 

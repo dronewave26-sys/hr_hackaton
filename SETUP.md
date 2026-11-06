@@ -1,6 +1,6 @@
 # SkillProof AI — işə salma
 
-Bu mərhələnin əhatəsi: HR vakansiyaları, CV saxlanması və mənbəli təhlil, sınaq layihəsinin redaktəsi/təsdiqi. Namizəd keçidi, server taymeri və yekun praktik hesabat növbəti mərhələdir. Deploy edilməyib.
+Bu mərhələnin əhatəsi: HR vakansiyaları, CV saxlanması və mənbəli təhlil, sınaq layihəsinin redaktəsi/təsdiqi. Namizəd keçidi, server taymeri və yekun praktik hesabat növbəti mərhələdir. İlk HR versiyası yayımlanıb; hazır Supabase/Vercel əlaqəsi və giriş qaydası [CLOUD_STATUS.md](CLOUD_STATUS.md)-dədir.
 
 ## Lokal demo
 

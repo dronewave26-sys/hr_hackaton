@@ -26,12 +26,12 @@ Real HTTP yoxlaması unit testlərdə görünməyən localhost/127.0.0.1 origin 
 ## Yoxlanmamış və növbəti mərhələyə qalan hissələr
 
 - Real Claude API sorğusu: açar və model lokal konfiqurasiyada qurulmayıb. Testlərdə provayder cavabları imitasiya olunur.
-- Real Supabase layihəsi, HR hesabları və RLS: miqrasiya hazırlanıb, uzaq bazada icra və iki real hesabla yoxlama edilməyib.
+- Real Supabase layihəsi, HR hesabları və RLS: 001 miqrasiyası tətbiq edilib, iki real uydurma HR hesabı ilə məlumat izolyasiyası yoxlanıb. Lokal və production API axınları keçir; təfərrüat `CLOUD_STATUS.md`-dədir.
 - Brauzerdə vizual və qarşılıqlı istifadə yoxlaması: avtomatlaşdırma hostu əlçatan olmadı; native Chrome pəncərəsi kiçildilmiş olduğundan dəstəklənən UI yolu ilə idarə edilə bilmədi. İstifadəçi lokal tətbiqi açıb yoxlaya bilər.
 - Bacarıqlar ilk mərhələdə HR tərəfindən daxil edilir; AI ilə avtomatik bacarıq çıxarma sonrakı genişləndirmədir.
 - Namizəd keçidi, sınaq sessiyası, server taymeri, mərhələli cavab/avtosaxlama, hadisələr və yekun praktik cavab hesabatı hələ qurulmayıb.
 - Tam rubrika səviyyələri və müqayisəli tapşırıq variantları növbəti mərhələyə aiddir.
-- Deploy edilməyib. Əvvəlki `VALIDATION_PLAN.md`-dəki bütün gələcək yoxlamalar tamamlanmış sayılmır.
+- İlk HR versiyası https://hr-hackaton.vercel.app ünvanında yayımlanıb. Əvvəlki `VALIDATION_PLAN.md`-dəki bütün gələcək yoxlamalar tamamlanmış sayılmır.
 
 ## İndi istifadə
 
