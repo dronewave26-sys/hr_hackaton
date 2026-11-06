@@ -1,0 +1,161 @@
+.shell {
+  min-height: 100vh;
+  background: #f1f5f9;
+  color: #152438;
+  padding: 24px 16px 60px;
+  font-family: Arial, sans-serif;
+}
+.wrap {
+  max-width: 880px;
+  margin: auto;
+  min-width: 0;
+}
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 0 24px;
+}
+.brand {
+  color: #155e75;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+.card {
+  background: white;
+  border: 1px solid #ccd7e2;
+  border-radius: 16px;
+  padding: clamp(16px, 4vw, 32px);
+  margin-bottom: 16px;
+  overflow-wrap: anywhere;
+}
+.card h1 {
+  font-size: clamp(24px, 5vw, 34px);
+  margin-bottom: 16px;
+  font-weight: 700;
+  line-height: 1.25;
+}
+.card h2 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 12px 0;
+}
+.card p,
+.card li {
+  line-height: 1.7;
+  margin: 10px 0;
+}
+.card ul {
+  padding-left: 24px;
+  list-style: disc;
+}
+.text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 1.7;
+}
+.label {
+  display: block;
+  font-weight: 700;
+  margin: 20px 0 10px;
+}
+.answer {
+  display: block;
+  width: 100%;
+  min-height: 230px;
+  padding: 16px;
+  border: 1px solid #64748b;
+  border-radius: 8px;
+  font: inherit;
+  line-height: 1.6;
+  resize: vertical;
+}
+.button {
+  background: #155e75;
+  color: white;
+  border: 2px solid transparent;
+  border-radius: 8px;
+  padding: 12px 18px;
+  min-height: 46px;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.button:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+.secondary {
+  background: white;
+  color: #155e75;
+  border-color: #155e75;
+}
+.shell :focus-visible,
+.control :focus-visible {
+  outline: 3px solid #d97706;
+  outline-offset: 4px;
+}
+.actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+.status {
+  padding: 12px 0;
+  color: #36516b;
+}
+.error {
+  border-left: 4px solid #b45309;
+  background: #fff7ed;
+  color: #7c2d12;
+  padding: 16px;
+  margin: 12px 0;
+}
+.timer {
+  font-variant-numeric: tabular-nums;
+  padding: 10px 16px;
+  background: white;
+  border: 1px solid #ccd7e2;
+  border-radius: 8px;
+}
+.steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px;
+}
+.steps li {
+  padding: 8px 12px;
+  background: #e2e8f0;
+  border-radius: 6px;
+}
+.steps [aria-current] {
+  background: #155e75;
+  color: white;
+}
+.dialog {
+  width: min(92vw, 500px);
+  margin: auto;
+  padding: 28px;
+  border: 1px solid #ccd7e2;
+  border-radius: 14px;
+  color: #152438;
+}
+.dialog::backdrop {
+  background: #0f172aaa;
+}
+.control {
+  padding: 16px 0;
+  overflow-wrap: anywhere;
+}
+.control input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #64748b;
+  margin: 8px 0;
+}
