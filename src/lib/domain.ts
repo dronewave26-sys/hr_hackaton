@@ -20,6 +20,25 @@ export type Workspace = { revision: number; vacancies: Vacancy[] };
 export type AppConfig = { storage: "local" | "supabase"; aiReady: boolean; model: string | null; account: string | null };
 export const emptyWorkspace = (): Workspace => ({ revision: 0, vacancies: [] });
 
+// Stored JSON must be checked just like an external API response.
+const assessmentSchema = z.object({
+  stages: z.tuple([text.max(12000), text.max(12000), text.max(12000)]),
+  materials: text.max(16000), duration: z.number().int().min(5).max(120),
+  criteria: z.array(text.max(500)).min(1).max(15), approvedAt: z.iso.datetime().optional(),
+});
+export const workspaceSchema = z.object({
+  revision: z.number().int().nonnegative(),
+  vacancies: z.array(z.object({
+    id: z.uuid(), title: text.max(160), department: text.max(100), description: text.min(30).max(12000),
+    skills: z.array(text.max(160)).min(1).max(15), createdAt: z.iso.datetime(),
+    demoKey: z.enum(["sales", "soc"]).optional(), assessment: assessmentSchema.optional(),
+    candidates: z.array(z.object({
+      id: z.uuid(), name: text.max(120), cv: z.string().min(30).max(30000), demoKey: z.string().optional(), createdAt: z.iso.datetime(),
+      analysis: analysisSchema.extend({ source: z.enum(["claude", "saved-demo"]), createdAt: z.iso.datetime(), model: z.string().optional() }).optional(),
+    })),
+  })),
+});
+
 export function validateAnalysis(value: unknown, skills: string[], cv: string): AnalysisContent {
   const result = analysisSchema.parse(value);
   if (result.items.length !== skills.length || new Set(result.items.map((item) => item.skill)).size !== skills.length) {

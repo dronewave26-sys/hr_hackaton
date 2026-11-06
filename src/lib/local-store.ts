@@ -1,7 +1,8 @@
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import { randomUUID } from "node:crypto";
-import { emptyWorkspace, type Workspace } from "./domain";
+import { z } from "zod";
+import { emptyWorkspace, workspaceSchema, type Workspace } from "./domain";
 
 type GlobalLocks = typeof globalThis & { skillproofLocks?: Map<string, Promise<unknown>> };
 const locks = ((globalThis as GlobalLocks).skillproofLocks ??= new Map());
@@ -9,7 +10,7 @@ const locks = ((globalThis as GlobalLocks).skillproofLocks ??= new Map());
 export class LocalStore {
   constructor(private file: string) {}
   private async all(): Promise<Record<string, Workspace>> {
-    try { return JSON.parse(await readFile(this.file, "utf8")); }
+    try { return z.record(z.string(), workspaceSchema).parse(JSON.parse(await readFile(this.file, "utf8"))); }
     catch (error) { if ((error as NodeJS.ErrnoException).code === "ENOENT") return {}; throw error; }
   }
   async get(owner: string): Promise<Workspace> {
@@ -23,6 +24,7 @@ export class LocalStore {
       const current = all[owner] ?? emptyWorkspace();
       const result = transform(structuredClone(current));
       result.revision = current.revision + 1;
+      workspaceSchema.parse(result);
       all[owner] = result;
       await mkdir(dirname(this.file), { recursive: true });
       const temporary = `${this.file}.${randomUUID()}.tmp`;
