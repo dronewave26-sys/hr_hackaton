@@ -2,7 +2,8 @@
 create table if not exists public.skillproof_workspaces (
   owner_id uuid primary key references auth.users(id) on delete cascade,
   revision integer not null check (revision > 0),
-  data jsonb not null default '{"vacancies": []}'::jsonb,
+  data jsonb not null default '{"vacancies": []}'::jsonb
+    check (jsonb_typeof(data) = 'object' and data ? 'vacancies' and jsonb_typeof(data -> 'vacancies') = 'array'),
   updated_at timestamptz not null default now()
 );
 
@@ -17,3 +18,21 @@ for insert to authenticated with check ((select auth.uid()) = owner_id);
 create policy "HR updates own workspace" on public.skillproof_workspaces
 for update to authenticated using ((select auth.uid()) = owner_id)
 with check ((select auth.uid()) = owner_id);
+
+create or replace function public.skillproof_touch_workspace()
+returns trigger
+language plpgsql
+set search_path = ''
+as $$
+begin
+  if new.revision <> old.revision + 1 then
+    raise exception 'Workspace revision must advance by one' using errcode = '23514';
+  end if;
+  new.updated_at = now();
+  return new;
+end;
+$$;
+
+create trigger skillproof_workspace_updated
+before update on public.skillproof_workspaces
+for each row execute function public.skillproof_touch_workspace();
