@@ -12,6 +12,14 @@
 
 Ortaq fayla ehtiyac yaranarsa əvvəl inteqrasiya AI-yə yazılır. `package.json` və lockfile yalnız inteqrasiya AI tərəfindən dəyişdirilir. API formatı razılaşdırılmadan dəyişdirilmir. Heç bir AI başqa worktree-də checkout, reset, clean və ya force push etmir.
 
+## Yeni iş: namizəd modulu
+
+İstifadəçi namizəd tərəfini dostunun Codex-i ilə hazırlayacaq. `ai/candidate` branch-i son `origin/main`-dən başlanır. Tam tapşırıq və ilkin API müqaviləsi [CANDIDATE_HANDOFF.md](CANDIDATE_HANDOFF.md)-dədir.
+
+Bu iş üçün `src/app/candidate/**`, `src/components/candidate/**`, `src/app/api/candidate/**`, `src/app/api/candidate-invitations/**`, `src/lib/candidate/**`, `src/lib/server/candidate/**`, `supabase/migrations/002_candidate_sessions.sql`, `tests/candidate/**`, `scripts/candidate-smoke.mjs` və `CANDIDATE_IMPLEMENTATION.md` namizəd icraçısına ayrılır. Bu konkret istisnalar yuxarıdakı ümumi frontend/backend sahibliyindən üstündür. Digər AI-lər həmin faylları paralel dəyişməməlidir.
+
+Namizəd icraçısı mövcud HR ekranını, workspace API-sini, ortaq domain/konfiqurasiyanı və 001 miqrasiyasını dəyişmir. HR ekranına qoşulma, ortaq env/CI dəyişiklikləri və final birləşdirmə inteqrasiya roluna aiddir. Namizəd modulu və yekun praktik AI hesabatı hazır kimi təqdim edilmir; bu sənəd yalnız iş bölgüsünü müəyyənləşdirir.
+
 ## Bu mərhələnin dəqiq əhatəsi
 
 HR vakansiya yaradır, bacarıqları daxil edir, CV saxlayır və mənbəli təhlil alır. Satış və SOC üçün uydurma nümunələr ayrıca yüklənir. Sınağın üç mərhələsi, materialı, müddəti və meyarları redaktə və HR təsdiqi ilə saxlanır.
