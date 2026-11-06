@@ -46,6 +46,7 @@ Rəsmi mənbə: [Supabase SSR müştərisi](https://supabase.com/docs/guides/aut
 - `npm test`
 - `npm run build`
 - Lokal server açıq olduqda `npm run test:api`
+- Build hazır olduqda `npm run test:integration` ayrıca production serveri başladır, real HTTP yoxlamasını keçir və öz serverini dayandırır. GitHub CI-də də bu yoxlama işləyir.
 
 `test:api` hər dəfə ayrıca demo brauzer kukisi ilə yalnız uydurma məlumat yaradır. Əsas iş sahəsini və real Supabase məlumatlarını yoxlamaq üçün nəzərdə tutulmayıb. Lokal `.data` daxilində testə aid ayrıca iş sahəsi qala bilər.
 

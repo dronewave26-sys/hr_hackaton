@@ -3,15 +3,34 @@ import { NextRequest } from "next/server";
 import { createHash } from "node:crypto";
 
 const mocks = vi.hoisted(() => ({
-  cookieGet: vi.fn(), cookieSet: vi.fn(), getUser: vi.fn(), createServerClient: vi.fn(), localGet: vi.fn(), localChange: vi.fn(),
+  cookieGet: vi.fn(),
+  cookieSet: vi.fn(),
+  getUser: vi.fn(),
+  createServerClient: vi.fn(),
+  localGet: vi.fn(),
+  localChange: vi.fn(),
 }));
 vi.mock("server-only", () => ({}));
-vi.mock("next/headers", () => ({ cookies: async () => ({ get: mocks.cookieGet, set: mocks.cookieSet, getAll: () => [] }) }));
-vi.mock("@supabase/ssr", () => ({ createServerClient: mocks.createServerClient }));
-vi.mock("../../src/lib/local-store", () => ({ LocalStore: class { get = mocks.localGet; change = mocks.localChange; } }));
+vi.mock("next/headers", () => ({
+  cookies: async () => ({
+    get: mocks.cookieGet,
+    set: mocks.cookieSet,
+    getAll: () => [],
+  }),
+}));
+vi.mock("@supabase/ssr", () => ({
+  createServerClient: mocks.createServerClient,
+}));
+vi.mock("../../src/lib/local-store", () => ({
+  LocalStore: class {
+    get = mocks.localGet;
+    change = mocks.localChange;
+  },
+}));
 import { context, requireSameOrigin } from "../../src/lib/server/context";
 
-const request = (url = "http://localhost/api/workspace", origin?: string) => new NextRequest(url, { headers: origin ? { origin } : {} });
+const request = (url = "http://localhost/api/workspace", origin?: string) =>
+  new NextRequest(url, { headers: origin ? { origin } : {} });
 
 beforeEach(() => {
   vi.clearAllMocks();
@@ -34,21 +53,33 @@ describe("local mode isolation", () => {
     expect(ctx.config.aiReady).toBe(false);
     const [, secret, options] = mocks.cookieSet.mock.calls[0];
     expect(secret).toMatch(/^[a-f0-9]{64}$/);
-    expect(options).toMatchObject({ httpOnly: true, sameSite: "strict", secure: false });
-    expect(mocks.localGet).toHaveBeenCalledWith(createHash("sha256").update(secret).digest("hex"));
+    expect(options).toMatchObject({
+      httpOnly: true,
+      sameSite: "strict",
+      secure: false,
+    });
+    expect(mocks.localGet).toHaveBeenCalledWith(
+      createHash("sha256").update(secret).digest("hex"),
+    );
   });
   it("uses the current owner's cookie without creating a new one", async () => {
     const secret = "a".repeat(64);
     mocks.cookieGet.mockReturnValue({ value: secret });
     await (await context(request())).get();
     expect(mocks.cookieSet).not.toHaveBeenCalled();
-    expect(mocks.localGet).toHaveBeenCalledWith(createHash("sha256").update(secret).digest("hex"));
+    expect(mocks.localGet).toHaveBeenCalledWith(
+      createHash("sha256").update(secret).digest("hex"),
+    );
   });
   it("rejects remote hosts even if local demo was explicitly enabled", async () => {
-    await expect(context(request("https://example.com/api/workspace"))).rejects.toMatchObject({ status: 503 });
+    await expect(
+      context(request("https://example.com/api/workspace")),
+    ).rejects.toMatchObject({ status: 503 });
   });
   it("does not let an internal localhost URL hide a remote actual Host", async () => {
-    const remote = new NextRequest("http://localhost:3000/api/workspace", { headers: { host: "example.com:3000" } });
+    const remote = new NextRequest("http://localhost:3000/api/workspace", {
+      headers: { host: "example.com:3000" },
+    });
     await expect(context(remote)).rejects.toMatchObject({ status: 503 });
   });
   it("does not silently enable local storage in production", async () => {
@@ -71,31 +102,58 @@ describe("local mode isolation", () => {
 
 describe("origin validation", () => {
   it("allows exact same origin and rejects absent or cross origin", () => {
-    expect(() => requireSameOrigin(request("http://localhost/api", "http://localhost"))).not.toThrow();
-    expect(() => requireSameOrigin(request("http://localhost/api", "https://attacker.example"))).toThrow();
+    expect(() =>
+      requireSameOrigin(request("http://localhost/api", "http://localhost")),
+    ).not.toThrow();
+    expect(() =>
+      requireSameOrigin(
+        request("http://localhost/api", "https://attacker.example"),
+      ),
+    ).toThrow();
     expect(() => requireSameOrigin(request())).toThrow();
   });
   it("accepts browser-facing loopback Host when Next normalizes its internal URL", () => {
-    const normalized = new NextRequest("http://localhost:3000/api/workspace", { headers: { host: "127.0.0.1:3000", origin: "http://127.0.0.1:3000" } });
+    const normalized = new NextRequest("http://localhost:3000/api/workspace", {
+      headers: { host: "127.0.0.1:3000", origin: "http://127.0.0.1:3000" },
+    });
     expect(() => requireSameOrigin(normalized)).not.toThrow();
   });
   it("normalizes case and default ports without changing origin identity", () => {
-    const normalized = new NextRequest("http://localhost/api", { headers: { host: "LOCALHOST:80", origin: "http://localhost" } });
+    const normalized = new NextRequest("http://localhost/api", {
+      headers: { host: "LOCALHOST:80", origin: "http://localhost" },
+    });
     expect(() => requireSameOrigin(normalized)).not.toThrow();
   });
   it.each([
-    "https://127.0.0.1:3000", "http://127.0.0.1:4000", "http://localhost:3000", "http://attacker.example",
-    "null", "http://127.0.0.1:3000/path", "http://user@127.0.0.1:3000", "http://127.0.0.1:3000,http://attacker.example",
+    "https://127.0.0.1:3000",
+    "http://127.0.0.1:4000",
+    "http://localhost:3000",
+    "http://attacker.example",
+    "null",
+    "http://127.0.0.1:3000/path",
+    "http://user@127.0.0.1:3000",
+    "http://127.0.0.1:3000,http://attacker.example",
   ])("rejects a different or malformed browser origin: %s", (origin) => {
-    const req = new NextRequest("http://localhost:3000/api", { headers: { host: "127.0.0.1:3000", origin } });
+    const req = new NextRequest("http://localhost:3000/api", {
+      headers: { host: "127.0.0.1:3000", origin },
+    });
     expect(() => requireSameOrigin(req)).toThrow();
   });
   it("does not trust forwarded host/protocol to match an attacker origin", () => {
-    const req = new NextRequest("http://localhost:3000/api", { headers: { host: "127.0.0.1:3000", origin: "https://attacker.example", "x-forwarded-host": "attacker.example", "x-forwarded-proto": "https" } });
+    const req = new NextRequest("http://localhost:3000/api", {
+      headers: {
+        host: "127.0.0.1:3000",
+        origin: "https://attacker.example",
+        "x-forwarded-host": "attacker.example",
+        "x-forwarded-proto": "https",
+      },
+    });
     expect(() => requireSameOrigin(req)).toThrow();
   });
   it("rejects malformed Host values instead of parsing them as URLs", () => {
-    const req = new NextRequest("http://localhost/api", { headers: { host: "localhost/attacker", origin: "http://localhost" } });
+    const req = new NextRequest("http://localhost/api", {
+      headers: { host: "localhost/attacker", origin: "http://localhost" },
+    });
     expect(() => requireSameOrigin(req)).toThrow();
   });
 });
@@ -104,8 +162,13 @@ describe("Supabase identity verification", () => {
   it("requires getUser to verify an HR before reading any data", async () => {
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "https://project.supabase.co");
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "publishable");
-    mocks.getUser.mockResolvedValue({ data: { user: null }, error: { message: "expired" } });
-    mocks.createServerClient.mockReturnValue({ auth: { getUser: mocks.getUser } });
+    mocks.getUser.mockResolvedValue({
+      data: { user: null },
+      error: { message: "expired" },
+    });
+    mocks.createServerClient.mockReturnValue({
+      auth: { getUser: mocks.getUser },
+    });
     await expect(context(request())).rejects.toMatchObject({ status: 401 });
     expect(mocks.getUser).toHaveBeenCalledOnce();
   });
@@ -114,29 +177,67 @@ describe("Supabase identity verification", () => {
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "publishable");
     const queries: { filters: unknown[][]; update?: unknown }[] = [];
     const from = vi.fn(() => {
-      const record: { filters: unknown[][]; update?: unknown } = { filters: [] };
+      const record: { filters: unknown[][]; update?: unknown } = {
+        filters: [],
+      };
       queries.push(record);
       const chain = {
-        select: () => record.update ? Promise.resolve({ data: [], error: null }) : chain,
-        eq: (...args: unknown[]) => { record.filters.push(args); return chain; },
-        maybeSingle: async () => ({ data: { revision: 2, data: { vacancies: [] } }, error: null }),
-        update: (value: unknown) => { record.update = value; return chain; },
+        select: () =>
+          record.update ? Promise.resolve({ data: [], error: null }) : chain,
+        eq: (...args: unknown[]) => {
+          record.filters.push(args);
+          return chain;
+        },
+        maybeSingle: async () => ({
+          data: { revision: 2, data: { vacancies: [] } },
+          error: null,
+        }),
+        update: (value: unknown) => {
+          record.update = value;
+          return chain;
+        },
       };
       return chain;
     });
-    mocks.getUser.mockResolvedValue({ data: { user: { id: "verified-owner", email: "demo@example.invalid" } }, error: null });
-    mocks.createServerClient.mockReturnValue({ auth: { getUser: mocks.getUser }, from });
+    mocks.getUser.mockResolvedValue({
+      data: { user: { id: "verified-owner", email: "demo@example.invalid" } },
+      error: null,
+    });
+    mocks.createServerClient.mockReturnValue({
+      auth: { getUser: mocks.getUser },
+      from,
+    });
     const ctx = await context(request());
-    await expect(ctx.change((value) => value)).rejects.toMatchObject({ status: 409 });
+    await expect(ctx.change((value) => value)).rejects.toMatchObject({
+      status: 409,
+    });
     expect(queries[0].filters).toContainEqual(["owner_id", "verified-owner"]);
-    expect(queries[1].filters).toEqual([["owner_id", "verified-owner"], ["revision", 2]]);
+    expect(queries[1].filters).toEqual([
+      ["owner_id", "verified-owner"],
+      ["revision", 2],
+    ]);
   });
   it("rejects corrupt stored JSON without silently resetting it", async () => {
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "https://project.supabase.co");
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "publishable");
-    const chain = { select: () => chain, eq: () => chain, maybeSingle: async () => ({ data: { revision: 1, data: { vacancies: "corrupt" } }, error: null }) };
-    mocks.getUser.mockResolvedValue({ data: { user: { id: "verified-owner" } }, error: null });
-    mocks.createServerClient.mockReturnValue({ auth: { getUser: mocks.getUser }, from: () => chain });
-    await expect((await context(request())).get()).rejects.toMatchObject({ status: 503 });
+    const chain = {
+      select: () => chain,
+      eq: () => chain,
+      maybeSingle: async () => ({
+        data: { revision: 1, data: { vacancies: "corrupt" } },
+        error: null,
+      }),
+    };
+    mocks.getUser.mockResolvedValue({
+      data: { user: { id: "verified-owner" } },
+      error: null,
+    });
+    mocks.createServerClient.mockReturnValue({
+      auth: { getUser: mocks.getUser },
+      from: () => chain,
+    });
+    await expect((await context(request())).get()).rejects.toMatchObject({
+      status: 503,
+    });
   });
 });

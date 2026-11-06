@@ -2,7 +2,7 @@
 
 CV-dəki bacarıq iddiasını praktik iş nümunəsi ilə müqayisə edən HR tətbiqi üçün hazırlıq paketi.
 
-**Cari mərhələ: ilk işlək HR versiyasının inteqrasiyası.** İstifadəçi kodlaşdırmaya və üç AI ilə paralel işə başlamağı tapşırıb. Lokal HR paneli, CV təhlili və sınaq layihəsi hazırlanır. Real Supabase/Claude bağlantısı konfiqurasiya tələb edir; deploy edilməyib. İlkin hazırlıq sənədləri tarixçə kimi qorunur.
+**Cari mərhələ: ilk işlək HR versiyası.** Üç AI-nin interfeys, server və inteqrasiya işi birləşdirilib. Lokal vakansiya/CV saxlama, mənbəli demo təhlili və sınaq layihəsi işləyir; 63 test və production HTTP axını yoxlanıb. Real Supabase/Claude bağlantısı ayrıca konfiqurasiya və sınaq tələb edir. Namizəd sessiyası/taymeri və yekun praktik hesabat növbəti mərhələdir; deploy edilməyib.
 
 ## Son razılaşdırılmış qərarlar
 
@@ -20,12 +20,13 @@ CV-dəki bacarıq iddiasını praktik iş nümunəsi ilə müqayisə edən HR t�
 | npm | 11.20.0 | İşləyir |
 | Git | 2.56.0.windows.4 | İstifadəçi səviyyəsində quraşdırıldı, PATH əlavə edildi və əmr yoxlandı |
 
-Git yolu: `C:\Users\ASUS\AppData\Local\Programs\Git\cmd`. Artıq açıq VS Code/terminallar köhnə PATH-i saxlaya bilər; VS Code-u yenidən açmaq lazım ola bilər. Lokal repo və ayrıca `ai/frontend`, `ai/backend` branch-ləri yaradılıb. GitHub-da private depo seçilib; uzaq bağlantının tamamlanması hesab girişindən asılıdır.
+Git yolu: `C:\Users\ASUS\AppData\Local\Programs\Git\cmd`. Artıq açıq VS Code/terminallar köhnə PATH-i saxlaya bilər; VS Code-u yenidən açmaq lazım ola bilər. Lokal repo və ayrıca `ai/frontend`, `ai/backend` branch-ləri yaradılıb. Uzaq private depo: [dronewave26-sys/hr_hackaton](https://github.com/dronewave26-sys/hr_hackaton).
 
 ## Sənədləri bu ardıcıllıqla oxu
 
 | Sənəd | Nə üçün istifadə olunur? |
 | --- | --- |
+| [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md) | Hazır işləyən hissələr, keçən yoxlamalar və real məhdudiyyətlər |
 | [SETUP.md](SETUP.md) | Lokal işə salma, Claude/Supabase konfiqurasiyası və yoxlama əmrləri |
 | [TEAM_WORKFLOW.md](TEAM_WORKFLOW.md) | Üç AI üçün fayl sahibliyi, API müqaviləsi və birləşdirmə qaydası |
 | [PREPARATION.md](PREPARATION.md) | İlkin mühit yoxlaması və hazırlıq siyahısı; sondakı yenilənməni də oxu |
