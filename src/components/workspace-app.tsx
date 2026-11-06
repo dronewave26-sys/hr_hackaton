@@ -44,6 +44,8 @@ import type {
   Workspace,
   WorkspaceAction,
 } from "@/lib/domain";
+import { CandidateInvitationControl } from "@/components/candidate/candidate-invitation-control";
+import { PracticalResults } from "@/components/practical-results";
 
 type View = "overview" | "candidates" | "analyses" | "settings";
 type ActionInput = WorkspaceAction extends infer A
@@ -455,6 +457,7 @@ export function WorkspaceApp() {
               key={selected.id}
               vacancy={selected}
               config={config}
+              workspaceRevision={workspace.revision}
               busy={busy}
               act={act}
               activeCandidateId={candidateId}
@@ -1079,6 +1082,7 @@ function CandidateForm({
 function VacancyDetail({
   vacancy,
   config,
+  workspaceRevision,
   busy,
   act,
   activeCandidateId,
@@ -1089,6 +1093,7 @@ function VacancyDetail({
 }: {
   vacancy: Vacancy;
   config: AppConfig;
+  workspaceRevision: number;
   busy: boolean;
   act: Action;
   activeCandidateId: string | null;
@@ -1207,6 +1212,37 @@ function VacancyDetail({
             ))}
           </aside>
           <div className="candidate-main">
+            <section className="panel">
+              <div className="panel-heading">
+                <div>
+                  <p className="eyebrow">PRAKTİK BACARIQ YOXLAMASI</p>
+                  <h2>Namizədə sınaq göndər</h2>
+                  <p>
+                    Təsdiqlənmiş sınağın ayrıca keçidini yaradın və paylaşın.
+                  </p>
+                </div>
+                <Badge
+                  tone={vacancy.assessment?.approvedAt ? "green" : "amber"}
+                >
+                  {vacancy.assessment?.approvedAt
+                    ? "Sınaq təsdiqlənib"
+                    : "HR təsdiqi gözlənilir"}
+                </Badge>
+              </div>
+              <div className="form">
+                <CandidateInvitationControl
+                  vacancyId={vacancy.id}
+                  candidateId={candidate.id}
+                  workspaceRevision={workspaceRevision}
+                  approved={Boolean(vacancy.assessment?.approvedAt)}
+                />
+              </div>
+            </section>
+            <PracticalResults
+              key={`${vacancy.id}:${candidate.id}`}
+              vacancyId={vacancy.id}
+              candidateId={candidate.id}
+            />
             <section className="panel cv-panel">
               <div className="panel-heading">
                 <div>
@@ -1440,8 +1476,8 @@ function AssessmentEditor({
         <div>
           <strong>Sınağı namizədin gözü ilə nəzərdən keçirin.</strong>
           <p>
-            Materialı, mərhələləri və meyarları yoxlayıb təsdiqləyin. Namizəd
-            keçidi bu mərhələdə aktiv deyil.
+            Materialı, mərhələləri və meyarları yoxlayıb təsdiqləyin. Sonra
+            namizəd bölməsindən ayrıca sınaq keçidi yarada bilərsiniz.
           </p>
         </div>
         <Badge tone={savedApproval && !dirty ? "green" : "amber"}>

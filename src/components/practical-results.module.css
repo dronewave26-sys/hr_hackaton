@@ -1,0 +1,388 @@
+.panel {
+  overflow-wrap: anywhere;
+}
+.heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 16px;
+  padding: 23px 23px 10px;
+}
+.heading h2 {
+  font-size: 16px;
+}
+.heading p:not(:global(.eyebrow)) {
+  color: #829486;
+  line-height: 1.8;
+  font-size: 11px;
+  margin-top: 8px;
+}
+.refreshHint {
+  padding: 0 23px 18px;
+  color: #8a9a8c;
+  font-size: 10px;
+  line-height: 1.8;
+}
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 25px;
+  color: #739078;
+  font-size: 12px;
+}
+.error {
+  background: #fff3ef;
+  color: #a65442;
+  border-left: 3px solid #d9a28f;
+  margin: 12px 23px;
+  padding: 13px;
+  font-size: 12px;
+  line-height: 1.8;
+}
+.empty {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 23px 35px;
+  color: #789a7f;
+}
+.empty h3 {
+  font-size: 14px;
+  color: #496b53;
+  margin-top: 15px;
+}
+.empty p {
+  font-size: 11px;
+  line-height: 1.9;
+  max-width: 390px;
+  margin-top: 10px;
+  color: #8c9e8e;
+}
+.history {
+  padding: 19px 23px;
+  border-top: 1px solid #edf1e9;
+  border-bottom: 1px solid #edf1e9;
+  background: #fbfcfa;
+}
+.history label {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 9px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #64806b;
+}
+.history label span {
+  color: #95a48f;
+  font-weight: 400;
+}
+.history select {
+  width: 100%;
+  font-size: 12px;
+  padding: 11px;
+}
+.sessionMeta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  padding: 18px 23px;
+  font-size: 10px;
+  color: #859b87;
+}
+.status {
+  padding: 5px 8px;
+  border-radius: 5px;
+  background: #edf6e9;
+  color: #638858;
+  font-weight: 600;
+}
+.snapshot {
+  padding: 14px 23px;
+  border-top: 1px solid #eff3eb;
+  border-bottom: 1px solid #eff3eb;
+  font-size: 11px;
+  color: #71886e;
+}
+.snapshot summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.snapshot p {
+  margin-top: 13px;
+}
+.snapshot h3 {
+  margin-top: 20px;
+  font-size: 12px;
+}
+.snapshot ul,
+.limitations ul {
+  list-style: disc;
+  padding-left: 19px;
+  margin-top: 10px;
+  line-height: 1.9;
+}
+.preserve {
+  white-space: pre-wrap;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+}
+.answers {
+  padding: 22px 23px 0;
+}
+.answers > h3 {
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+.answer {
+  border: 1px solid #e5ece0;
+  border-radius: 8px;
+  padding: 17px;
+  margin-bottom: 14px;
+}
+.answerHeading,
+.criterionHeading {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 12px;
+}
+.answerHeading h4 {
+  font-size: 12px;
+  font-weight: 600;
+  color: #587951;
+}
+.answerHeading span {
+  font-size: 9px;
+  color: #95a58b;
+}
+.answer details {
+  font-size: 10px;
+  color: #8ba17d;
+  margin: 13px 0;
+}
+.answer summary {
+  cursor: pointer;
+}
+.answer details p {
+  margin-top: 8px;
+}
+.answerText {
+  background: #f6faf2;
+  border-radius: 5px;
+  padding: 13px;
+  color: #5d7854;
+  font-size: 12px;
+  margin-bottom: 11px;
+}
+.answer small {
+  font-size: 9px;
+  color: #9eac91;
+}
+.noAnswer {
+  font-size: 11px;
+  color: #98a98b;
+  margin: 12px 0;
+  line-height: 1.8;
+}
+.reportSection {
+  border-top: 1px solid #e8eee1;
+  margin-top: 22px;
+  padding: 22px 23px;
+}
+.reportHeading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.reportHeading h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+}
+.reportHeading p {
+  font-size: 10px;
+  color: #8ba17a;
+  line-height: 1.8;
+  margin-top: 8px;
+  max-width: 390px;
+}
+.muted {
+  font-size: 11px;
+  line-height: 1.9;
+  color: #8b9d7f;
+  margin-top: 13px;
+}
+.report {
+  margin-top: 22px;
+}
+.reportSource {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  color: #648d51;
+  font-size: 11px;
+}
+.reportSource small {
+  margin-left: auto;
+  font-size: 9px;
+  color: #9cab8f;
+}
+.summary {
+  font-size: 12px;
+  line-height: 1.9;
+  color: #6c855a;
+  background: #f3f8ec;
+  border: 1px solid #e4ecd8;
+  border-radius: 7px;
+  padding: 15px;
+  margin-top: 15px;
+}
+.criterion {
+  margin-top: 17px;
+  border: 1px solid #e6edde;
+  border-radius: 8px;
+  padding: 17px;
+}
+.criterion h4 {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.8;
+}
+.level {
+  font-size: 9px;
+  border-radius: 5px;
+  padding: 5px 7px;
+  flex-shrink: 0;
+}
+.demonstrated {
+  color: #4c8654;
+  background: #edf7e9;
+}
+.partial {
+  color: #9b8149;
+  background: #faf5e7;
+}
+.not_demonstrated {
+  color: #859077;
+  background: #f0f4ec;
+}
+.criterion blockquote {
+  border-left: 2px solid #b3c99d;
+  background: #f8faf4;
+  padding: 11px;
+  margin: 15px 0 10px;
+  font-size: 11px;
+  line-height: 1.9;
+  white-space: pre-wrap;
+}
+.criterion blockquote span {
+  display: block;
+  font-size: 8px;
+  color: #95a77d;
+  margin-bottom: 5px;
+}
+.criterion > p {
+  color: #83966f;
+  font-size: 11px;
+  line-height: 1.9;
+  margin-top: 12px;
+}
+.question {
+  margin-top: 15px;
+  padding-top: 12px;
+  border-top: 1px solid #edf1e7;
+  font-size: 11px;
+  color: #7a9564;
+  line-height: 1.8;
+}
+.question strong {
+  font-size: 9px;
+}
+.question p {
+  margin-top: 5px;
+}
+.limitations {
+  background: #fcfaf3;
+  padding: 15px;
+  margin-top: 17px;
+  border: 1px solid #eeead8;
+  border-radius: 7px;
+  color: #95864f;
+  font-size: 11px;
+}
+.limitations h4 {
+  font-size: 12px;
+  font-weight: 600;
+}
+.model {
+  display: block;
+  font-size: 9px;
+  color: #98a786;
+  line-height: 1.8;
+  margin-top: 15px;
+}
+.humanNote {
+  display: flex;
+  gap: 9px;
+  border-top: 1px solid #eaf0e0;
+  padding: 16px 23px;
+  background: #fcfdf9;
+  color: #90a17d;
+  font-size: 10px;
+  line-height: 1.9;
+}
+.humanNote svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+@media (max-width: 680px) {
+  .heading {
+    padding: 20px 18px 10px;
+  }
+  .heading .button {
+    padding: 9px 12px;
+    font-size: 10px;
+  }
+  .refreshHint {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+  .history,
+  .sessionMeta,
+  .snapshot,
+  .answers,
+  .reportSection {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+  .error {
+    margin-left: 18px;
+    margin-right: 18px;
+  }
+  .criterionHeading {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .level {
+    font-size: 9px;
+  }
+  .reportSource small {
+    margin-left: 0;
+  }
+  .answer,
+  .criterion {
+    padding: 14px;
+  }
+  .humanNote {
+    padding: 15px 18px;
+  }
+}
