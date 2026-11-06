@@ -24,7 +24,7 @@ Köhnə hazırlıq sənədlərindəki “kodlaşdırma başlamayıb” və Gemin
 
 ## İşə başlama və Git qaydası
 
-Repo sahibinin səni collaborator kimi əlavə etməsi və dəvəti qəbul etməyin lazımdır. GitHub girişini öz hesabınla et; repo sahibinin şifrəsini/tokenini istəmə.
+İstifadəçi təsdiqləyib ki, hər iki kompüterdə eyni GitHub hesabına giriş var. Repo həmin hesabdan açılırsa collaborator dəvəti tələb olunmur. Giriş işləyirsə yenidən login və ya şifrə istəmə. GitHub hesabının eyni olması branch-lərin ayrı saxlanması qaydasını dəyişmir.
 
 Yeni kompüterdə:
 
@@ -38,6 +38,8 @@ npm run dev
 ```
 
 Repo artıq varsa, əvvəl git status yoxla, mövcud işi qoru və təmiz ayrıca worktree/branch istifadə et. Mövcud branch-i reset etmə. main-ə birbaşa push və force push etmə. Köhnə ai/frontend və ai/backend branch-lərindən başlama; ən son origin/main əsasdır.
+
+ai/candidate artıq varsa onu silib yenidən yaratma: həmin işi nəzərdən keçir və davam etdir. İş qovluğunu, aktiv branch-i və başlanğıc commit SHA-nı qeyd et. Repo giriş problemi varsa dəqiq xətanı göstər; eyni adlı sıfırdan başqa layihə qurma.
 
 ## Sənin sahib olduğun fayllar
 
@@ -85,7 +87,20 @@ Namizəd səhifəsi /candidate/[invitationId] olsun. Keçidin sirri URL fragment
 
 İctimai DTO-da bütün assessment.stages massivini ötürüb CSS ilə gizlətmək qadağandır. Başlanğıc ekranı gələcək tapşırıqları almır. HR CV-si, CV təhlili, başqa namizədlər, gizli cavab açarı və gələcək mərhələlər heç bir HTML/RSC/JSON cavabında namizədə verilməməlidir.
 
-HR tərəfinə qoşulacaq komponent hazırlasan props belə olsun: vacancyId, candidateId, workspaceRevision, approved. Komponent dəvət yaradır, keçidi kopyalamağı təklif edir və xətanı göstərir. approved yalnız UI rahatlığıdır; server təsdiqi ayrıca yoxlamalıdır. Mövcud HR ekranına komponenti sən yerləşdirmə; inteqrasiya AI-si yerləşdirəcək. Avtomatik e-poçt göndərmə.
+HR tərəfinə qoşulacaq src/components/candidate/candidate-invitation-control.tsx faylında named export CandidateInvitationControl komponentini hazırla. Props: vacancyId: string, candidateId: string, workspaceRevision: number, approved: boolean. Komponent dəvət yaradır, keçidi kopyalamağı təklif edir və xətanı göstərir. approved yalnız UI rahatlığıdır; server təsdiqi ayrıca yoxlamalıdır. Mövcud HR ekranına komponenti sən yerləşdirmə; inteqrasiya AI-si yerləşdirəcək. Avtomatik e-poçt göndərmə.
+
+### Format və vəziyyət müqaviləsi
+
+- Bütün ID-lər qeyri-ardıcıl identifikatorlar, vaxtlar UTC ISO 8601, durationMinutes dəqiqə, mərhələlər 1 | 2 | 3 olsun. Bitmə vaxtı dəvətin son istifadə vaxtından ayrıca session.expiresAt-dir.
+- Sessiya statusları: ready → active → submitted və ya expired; revoked girişin ayrıca ləğv vəziyyətidir. Terminal vəziyyətdən yenidən active-ə keçmək olmaz. Dəvət sirrinin mübadiləsi ready vəziyyətini dəyişmir.
+- Namizədə qaytarılan view: invitationId, sessionId, vacancyTitle, status, durationMinutes, serverNow, startedAt: string | null, expiresAt: string | null, completedAt: string | null, revision, currentStage: 1 | 2 | 3 | null və unlockedStages. Hər açılmış mərhələ: stage, prompt, acceptedAnswer, savedAt: string | null, locked. Material yalnız sınaq başlayandan sonra qaytarılır. ready vəziyyətində unlockedStages boşdur. Vaxt bitməsi gələcək mərhələləri açmır.
+- Namizəd mutation body-si type, invitationId, requestId və revision daşıyır; save/advance/submit əlavə olaraq stage və answer daşıyır. start üçün answer/stage lazım deyil. Hər body-ni Zod ilə yoxla; boş qaralamanın saxlanmasına icazə ver, mətn üçün açıq maksimum uzunluq müəyyən et və UI/serverdə eyni saxla.
+- Uğurlu sessiya cavabını { session: CandidateSessionView } kimi qaytar. Xəta { error: string, code: string } olsun. Statuslar: 400/413/415 giriş, 401 sessiya yoxdur, 403 icazə/origin, 404 obyekt yoxdur, 409 revision və ya vəziyyət uyğunsuzluğu, 410 bitmiş/ləğv edilmiş keçid, 429 sorğu həddi, 503 saxlama/konfiqurasiya. Vaxtı bitmiş həqiqi sessiyanın GET-i expired view qaytara bilər; yeni yazı isə rədd edilir.
+- Sessiya kukisinin səlahiyyəti həmişə səhifənin invitationId-si ilə yoxlanır. Digər dəvət eyni brauzerdə açıldıqda yanlış namizəd məlumatını göstərmə. Bir kuki eyni vaxtda yalnız bir sessiyanı dəstəkləyirsə ikinci tabda aydın sessiya uyğunsuzluğu göstər və bunu sənədləşdir; hər iki sessiyanın məlumatını qarışdırma.
+- HR GET cavabında snapshotId, vacancyId, candidateId, sınağın dəyişməz məzmunu/meyarları, status, başlanma/bitmə vaxtları və mərhələlər üzrə qəbul olunmuş cavablar olsun. Xam dəvət/session sirri heç vaxt HR GET cavabına əlavə olunmur. Bu DTO yekun AI hesabatına giriş olacaq; burada bal hesablama.
+- İdempotent təkrarlar səlahiyyət yoxlamasını keçməlidir. Təkrar start/advance/submit yeni keçid etmir; köhnə cavab snapshot-ı ilə UI-ni geriyə aparma. Keçid yaradılmasının cavabı itərsə yeni dəvətləri səssizcə çoxaltma; yalnız hash saxlanarkən xam keçidin sonradan yenidən göstərilməməsi halını UI və sənəddə aydın idarə et.
+
+Bu müqaviləni tiplərdə və sənəddə eyni saxla. Əsas inteqrasiya formatını dəyişmək məcburidirsə əvvəl səbəbini bildir; müxtəlif ekranlarda bir-birindən fərqli tiplər yaratma.
 
 ## Vaxt, saxlama və giriş qaydaları
 
@@ -97,12 +112,17 @@ HR tərəfinə qoşulacaq komponent hazırlasan props belə olsun: vacancyId, ca
 - Dəvətin keçərlilik vaxtı ilə sınağın bitmə vaxtını ayrı saxla; dəvət ləğvi sonrakı giriş və yazıları dayandırsın. Keçid kimliyin tam təsdiqi sayılmır.
 - Dəvət yaratmaq üçün mövcud HR context(request), sahiblik və sınaq təsdiqini yoxla; workspaceRevision köhnədirsə 409 qaytar. Namizəd API-si HR kukisi tələb etməyən ayrıca məhdud autentifikasiyadan istifadə etməlidir.
 - Bütün yazılarda origin/CSRF, giriş uzunluğu, vəziyyət və icazə yoxlamaları; özəl cavablarda no-store tətbiq et. Sirrləri və CV/cavab mətnlərini loglama.
+- Kriptoqrafik təsadüfi sirr, hash müqayisəsi, məhdud cookie ömrü, HttpOnly/SameSite və HTTPS mühitində Secure tətbiq et. Etibarsız exchange sorğuları üçün əsaslandırılmış limit və 429 davranışı olsun; tək proseslik lokal limitin istehsalatda paylaşılan limit olmadığını qeyd et.
 - Lokal demo üçün ayrıca .data/candidate-sessions.json istifadə et, mövcud workspace faylını dəyişmə. Atomik yazı və eyni prosesdə paralel sorğu kilidləməsi qur. Lokal fayl rejimi yalnız loopback üçündür.
 - Supabase qurulubsa səssiz lokal fallback etmə. Yeni cədvəllər/RLS və atomik keçidlər üçün 002 miqrasiyası hazırla; mövcud 001-i dəyişmə. HR öz dəvətlərinə çıxır; anon istifadəçiyə cədvəllərin ümumi oxunması verilmir. Server imtiyazlı açarı lazım olarsa yalnız serverdə istifadə et və tələb olunan dəyişən adını inteqrasiya qeydinə yaz. Açarı çata/Git-ə istəmə, real bazada miqrasiyanı özbaşına icra etmə.
 
 ## Dizayn və prioritet
 
 Azərbaycan dili, mobil ekran, klaviatura ilə istifadə, daimi form etiketləri, görünən fokus və oxunaqlı statuslar vacibdir. Namizəd ekranında HR sidebar-ı olmasın. Stil üçün CSS Modules istifadə et; qlobal HR üslubunu dəyişmə.
+
+320–390 px mobil və geniş desktop görünüşündə daşma yaratma. Uzun tapşırıq/loq mətnləri oxunsun, cavab sahəsi rahat ölçüdə olsun. Bir əsas hərəkət, aydın mərhələ göstəricisi və görünən saxlama statusu saxla. Ekran oxuyucusu üçün statusları uyğun live region-la elan et, amma taymeri hər saniyə səsləndirmə. Fokus mərhələ keçidindən sonra başlığa keçsin; hər autosave-də fokus sıçramasın. İstifadəçinin daxil etdiyi mətn HTML kimi icra edilməsin.
+
+Əsas ekranlar: yüklənmə, qaydalar/başlama, aktiv sınaq, saxlama xətası və konflikt, yekun təsdiq dialoqu, göndərildi, vaxt bitdi, etibarsız/ləğv edilmiş keçid. Hər birinin gerçək vəziyyətlə əlaqəsi olsun; dekorativ işləməyən düymə qoyma.
 
 Əvvəl dəvət → başlama → üç mərhələ → saxlama → yekunlaşdırma tam işləsin. Sonra vaxt qalarsa səhifədən ayrılma sayı/müddəti və əvvəlcədən bildirilən adi paste məhdudiyyəti əlavə et. Bunlar etibarlı köçürmə sübutu deyil; balı avtomatik azaltma. Kamera/mikrofon izləməsi, AI mətn detektoru, yeni giriş provayderi, yeni framework və deploy bu tapşırığa daxil deyil.
 
@@ -119,10 +139,27 @@ Azərbaycan dili, mobil ekran, klaviatura ilə istifadə, daimi form etiketləri
 9. İki submit bir nəticə yaradır; yekundan sonra yazı qəbul edilmir.
 10. Səhv/bitmiş/ləğv edilmiş sirr və başqa sessiya ID-si ilə giriş rədd edilir; sirlər və gələcək mərhələlər sızmır.
 11. Mobil və klaviatura axını yoxlanır; mövcud HR testləri keçməyə davam edir.
+12. Namizəd səhifəsi ayrı təmiz brauzer sessiyasında HR kukisi olmadan işləyir. Namizəd kukisi ilə HR workspace və HR dəvət nəticəsi əldə edilmir.
+13. Namizəd axınını test edən saxta server cavabları ilə yanaşı real HTTP axını da işləyir. Supabase adapterində CAS/sahiblik məhdudiyyətləri ayrıca yoxlanır; yalnız lokal fayl testi bazanın yoxlanması hesab olunmur.
 
 Unit və API testlərini yaz, real lokal HTTP sınağını scripts/candidate-smoke.mjs ilə ayrıca uydurma iş sahəsində keçir. İstifadəçinin mövcud .data faylını sıfırlama. Vitest hazırda tests/**/*.test.ts aşkarlayır; DOM testləri üçün jsdom artıq var.
 
 İcra et: npm run typecheck, npm run lint, npm test, npm run build, npm run test:integration və yeni namizəd smoke yoxlaması. Brauzer əlçatandırsa tam axını da yoxla. Real Supabase yoxlanmayıbsa açıq qeyd et; imitasiya testini real inteqrasiya kimi təqdim etmə.
+
+Yeni smoke skriptinin dəqiq işə salma əmrini, tələb etdiyi lokal server rejimini və cleanup davranışını yaz. Taymer testlərində 13 dəqiqə real gözləmə yerinə test saatından istifadə et; istehsalat API-sinə vaxtı dəyişdirən test qapısı əlavə etmə. Test keçirmək üçün mövcud qorumanı zəiflətmə, assertion-ları silmə və nəticəsiz testləri uğurlu sayma.
+
+## İcra ardıcıllığı və müstəqil işləmə
+
+1. Repo/branch/mövcud vəziyyəti yoxla, qısa icra planı ver və həmin turn-da implementasiyaya başla.
+2. Namizəd müqavilələri, dəyişməz sınaq surəti və sessiya vəziyyət keçidlərini qur.
+3. Saxlama adapterləri, dəvət autentifikasiyası və API-ləri tamamla.
+4. Namizəd ekranlarını həqiqi API-yə bağla; mock yalnız testlərdə istifadə olunsun.
+5. HR-ə qoşulacaq komponenti və təhvil sənədini hazırla.
+6. Kritik yoxlamaları keçir, tapılan xətaları düzəlt, branch-i push et və PR aç.
+
+Sadəcə plan və ya statik dizayn təqdim edib dayanma. Adi texniki seçimləri mövcud layihəyə uyğun özün həll et. Yalnız real giriş çatışmazlığı, ziddiyyətli müqavilə və ya ayrılmamış ortaq fayla məcburi dəyişiklik kimi blokları qısa və konkret bildir. Bu zaman digər müstəqil işi davam etdir. İstifadəçi sənə kodlaşdırma, öz branch-ində commit/push və PR açmaq icazəsi verir; main merge, deploy və uzaq bazada dəyişiklik bu icazəyə daxil deyil.
+
+Eyni account ilə işləyən digər Codex-in branch-inə, worktree-inə və proseslərinə toxunma. Başqasının serverini dayandırma; port məşğuldursa öz lokal serverinə ayrı port seç. Təhvildən əvvəl son main dəyişikliklərini nəzərdən keçir; zəruridirsə öz branch-inə merge et, başqa işin üzərinə yazma və force push etmə. Konflikt ortaq fayl sahibliyinə toxunursa inteqrasiya qeydi ilə bildir.
 
 ## Təhvil
 
